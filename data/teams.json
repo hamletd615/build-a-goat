@@ -1,0 +1,482 @@
+[
+  {
+    "abbr": "ATL",
+    "name": "Atlanta Hawks",
+    "conference": "East",
+    "baseRating": 39,
+    "stats": {
+      "w": 46,
+      "l": 36,
+      "ppg": 116.2,
+      "rpg": 42.4,
+      "apg": 28,
+      "ortg": 116.9,
+      "drtg": 116.1,
+      "note": "offense-heavy playoff team"
+    }
+  },
+  {
+    "abbr": "BOS",
+    "name": "Boston Celtics",
+    "conference": "East",
+    "baseRating": 56,
+    "stats": {
+      "w": 58,
+      "l": 24,
+      "ppg": 117.1,
+      "rpg": 44.8,
+      "apg": 26.8,
+      "ortg": 119,
+      "drtg": 111,
+      "note": "elite two-way contender"
+    }
+  },
+  {
+    "abbr": "BKN",
+    "name": "Brooklyn Nets",
+    "conference": "East",
+    "baseRating": 26,
+    "stats": {
+      "w": 20,
+      "l": 62,
+      "ppg": 107.4,
+      "rpg": 41.8,
+      "apg": 23.9,
+      "ortg": 108.4,
+      "drtg": 119.6,
+      "note": "deep rebuild"
+    }
+  },
+  {
+    "abbr": "CHA",
+    "name": "Charlotte Hornets",
+    "conference": "East",
+    "baseRating": 23,
+    "stats": {
+      "w": 44,
+      "l": 38,
+      "ppg": 112.4,
+      "rpg": 43,
+      "apg": 25.8,
+      "ortg": 113.2,
+      "drtg": 113.9,
+      "note": "young team climb"
+    }
+  },
+  {
+    "abbr": "CHI",
+    "name": "Chicago Bulls",
+    "conference": "East",
+    "baseRating": 35,
+    "stats": {
+      "w": 31,
+      "l": 51,
+      "ppg": 110.7,
+      "rpg": 42.9,
+      "apg": 25.1,
+      "ortg": 111.4,
+      "drtg": 117.1,
+      "note": "lottery profile"
+    }
+  },
+  {
+    "abbr": "CLE",
+    "name": "Cleveland Cavaliers",
+    "conference": "East",
+    "baseRating": 53,
+    "stats": {
+      "w": 55,
+      "l": 27,
+      "ppg": 115.1,
+      "rpg": 43.4,
+      "apg": 27.1,
+      "ortg": 117.5,
+      "drtg": 111.5,
+      "note": "balanced playoff team"
+    }
+  },
+  {
+    "abbr": "DAL",
+    "name": "Dallas Mavericks",
+    "conference": "West",
+    "baseRating": 50,
+    "stats": {
+      "w": 35,
+      "l": 47,
+      "ppg": 111.8,
+      "rpg": 42.8,
+      "apg": 24.8,
+      "ortg": 113,
+      "drtg": 116.5,
+      "note": "down season"
+    }
+  },
+  {
+    "abbr": "DEN",
+    "name": "Denver Nuggets",
+    "conference": "West",
+    "baseRating": 52,
+    "stats": {
+      "w": 54,
+      "l": 28,
+      "ppg": 116.9,
+      "rpg": 44,
+      "apg": 29.2,
+      "ortg": 119.4,
+      "drtg": 113.2,
+      "note": "elite offense"
+    }
+  },
+  {
+    "abbr": "DET",
+    "name": "Detroit Pistons",
+    "conference": "East",
+    "baseRating": 31,
+    "stats": {
+      "w": 60,
+      "l": 22,
+      "ppg": 116.4,
+      "rpg": 45.7,
+      "apg": 26.2,
+      "ortg": 117.3,
+      "drtg": 110.1,
+      "note": "60-win defensive jump"
+    }
+  },
+  {
+    "abbr": "GSW",
+    "name": "Golden State Warriors",
+    "conference": "West",
+    "baseRating": 45,
+    "stats": {
+      "w": 37,
+      "l": 45,
+      "ppg": 112.9,
+      "rpg": 43.1,
+      "apg": 28.5,
+      "ortg": 114.6,
+      "drtg": 116.4,
+      "note": "aging offense-heavy profile"
+    }
+  },
+  {
+    "abbr": "HOU",
+    "name": "Houston Rockets",
+    "conference": "West",
+    "baseRating": 47,
+    "stats": {
+      "w": 50,
+      "l": 32,
+      "ppg": 113.7,
+      "rpg": 45.8,
+      "apg": 24.9,
+      "ortg": 114.9,
+      "drtg": 111.4,
+      "note": "strong defense and rebounding"
+    }
+  },
+  {
+    "abbr": "IND",
+    "name": "Indiana Pacers",
+    "conference": "East",
+    "baseRating": 48,
+    "stats": {
+      "w": 19,
+      "l": 63,
+      "ppg": 107.8,
+      "rpg": 41.7,
+      "apg": 25.4,
+      "ortg": 108.7,
+      "drtg": 120,
+      "note": "19-win injury-crash season"
+    }
+  },
+  {
+    "abbr": "LAC",
+    "name": "LA Clippers",
+    "conference": "West",
+    "baseRating": 44,
+    "stats": {
+      "w": 42,
+      "l": 40,
+      "ppg": 112.5,
+      "rpg": 42,
+      "apg": 25.4,
+      "ortg": 114,
+      "drtg": 114.6,
+      "note": "steady veteran team"
+    }
+  },
+  {
+    "abbr": "LAL",
+    "name": "Los Angeles Lakers",
+    "conference": "West",
+    "baseRating": 49,
+    "stats": {
+      "w": 51,
+      "l": 31,
+      "ppg": 115.9,
+      "rpg": 42.5,
+      "apg": 27.2,
+      "ortg": 117.8,
+      "drtg": 114.1,
+      "note": "star offense"
+    }
+  },
+  {
+    "abbr": "MEM",
+    "name": "Memphis Grizzlies",
+    "conference": "West",
+    "baseRating": 43,
+    "stats": {
+      "w": 25,
+      "l": 57,
+      "ppg": 108.8,
+      "rpg": 42.7,
+      "apg": 24.9,
+      "ortg": 109.8,
+      "drtg": 118.5,
+      "note": "rebuild lottery season"
+    }
+  },
+  {
+    "abbr": "MIA",
+    "name": "Miami Heat",
+    "conference": "East",
+    "baseRating": 42,
+    "stats": {
+      "w": 43,
+      "l": 39,
+      "ppg": 111,
+      "rpg": 42.5,
+      "apg": 25.2,
+      "ortg": 112.7,
+      "drtg": 112.8,
+      "note": "scheme floor"
+    }
+  },
+  {
+    "abbr": "MIL",
+    "name": "Milwaukee Bucks",
+    "conference": "East",
+    "baseRating": 47,
+    "stats": {
+      "w": 39,
+      "l": 43,
+      "ppg": 113.6,
+      "rpg": 42.2,
+      "apg": 25.8,
+      "ortg": 115.2,
+      "drtg": 116.7,
+      "note": "below-.500 veteran year"
+    }
+  },
+  {
+    "abbr": "MIN",
+    "name": "Minnesota Timberwolves",
+    "conference": "West",
+    "baseRating": 51,
+    "stats": {
+      "w": 52,
+      "l": 30,
+      "ppg": 113.5,
+      "rpg": 44.6,
+      "apg": 25.2,
+      "ortg": 115.1,
+      "drtg": 110.6,
+      "note": "defense-first contender"
+    }
+  },
+  {
+    "abbr": "NOP",
+    "name": "New Orleans Pelicans",
+    "conference": "West",
+    "baseRating": 34,
+    "stats": {
+      "w": 29,
+      "l": 53,
+      "ppg": 109.9,
+      "rpg": 42.6,
+      "apg": 24.4,
+      "ortg": 110.6,
+      "drtg": 117.6,
+      "note": "injury-hit year"
+    }
+  },
+  {
+    "abbr": "NYK",
+    "name": "New York Knicks",
+    "conference": "East",
+    "baseRating": 54,
+    "stats": {
+      "w": 57,
+      "l": 25,
+      "ppg": 115.8,
+      "rpg": 43.8,
+      "apg": 25.7,
+      "ortg": 118.4,
+      "drtg": 111.7,
+      "note": "championship-level record bump"
+    }
+  },
+  {
+    "abbr": "OKC",
+    "name": "Oklahoma City Thunder",
+    "conference": "West",
+    "baseRating": 60,
+    "stats": {
+      "w": 64,
+      "l": 18,
+      "ppg": 119.5,
+      "rpg": 44.2,
+      "apg": 27.4,
+      "ortg": 121.2,
+      "drtg": 108.2,
+      "note": "64-win title-level profile"
+    }
+  },
+  {
+    "abbr": "ORL",
+    "name": "Orlando Magic",
+    "conference": "East",
+    "baseRating": 46,
+    "stats": {
+      "w": 48,
+      "l": 34,
+      "ppg": 111.2,
+      "rpg": 43.7,
+      "apg": 24.5,
+      "ortg": 112.1,
+      "drtg": 110.8,
+      "note": "defense carries the floor"
+    }
+  },
+  {
+    "abbr": "PHI",
+    "name": "Philadelphia 76ers",
+    "conference": "East",
+    "baseRating": 42,
+    "stats": {
+      "w": 45,
+      "l": 37,
+      "ppg": 112.8,
+      "rpg": 41.9,
+      "apg": 25,
+      "ortg": 114.8,
+      "drtg": 114.3,
+      "note": "middle playoff profile"
+    }
+  },
+  {
+    "abbr": "PHX",
+    "name": "Phoenix Suns",
+    "conference": "West",
+    "baseRating": 41,
+    "stats": {
+      "w": 45,
+      "l": 37,
+      "ppg": 114.2,
+      "rpg": 42.1,
+      "apg": 26,
+      "ortg": 116.1,
+      "drtg": 115.2,
+      "note": "shot-making team"
+    }
+  },
+  {
+    "abbr": "POR",
+    "name": "Portland Trail Blazers",
+    "conference": "West",
+    "baseRating": 25,
+    "stats": {
+      "w": 42,
+      "l": 40,
+      "ppg": 111.6,
+      "rpg": 43.5,
+      "apg": 24.6,
+      "ortg": 112.5,
+      "drtg": 113.7,
+      "note": "play-in level"
+    }
+  },
+  {
+    "abbr": "SAC",
+    "name": "Sacramento Kings",
+    "conference": "West",
+    "baseRating": 40,
+    "stats": {
+      "w": 22,
+      "l": 60,
+      "ppg": 108.5,
+      "rpg": 41.9,
+      "apg": 24.2,
+      "ortg": 109.2,
+      "drtg": 119,
+      "note": "deep lottery season"
+    }
+  },
+  {
+    "abbr": "SAS",
+    "name": "San Antonio Spurs",
+    "conference": "West",
+    "baseRating": 39,
+    "stats": {
+      "w": 62,
+      "l": 20,
+      "ppg": 118.7,
+      "rpg": 45.1,
+      "apg": 28.1,
+      "ortg": 119.1,
+      "drtg": 109.4,
+      "note": "62-win Wemby-led leap"
+    }
+  },
+  {
+    "abbr": "TOR",
+    "name": "Toronto Raptors",
+    "conference": "East",
+    "baseRating": 32,
+    "stats": {
+      "w": 46,
+      "l": 36,
+      "ppg": 113.1,
+      "rpg": 43.9,
+      "apg": 27.8,
+      "ortg": 114.2,
+      "drtg": 113.8,
+      "note": "solid developing team"
+    }
+  },
+  {
+    "abbr": "UTA",
+    "name": "Utah Jazz",
+    "conference": "West",
+    "baseRating": 24,
+    "stats": {
+      "w": 22,
+      "l": 60,
+      "ppg": 109,
+      "rpg": 43.3,
+      "apg": 24.8,
+      "ortg": 109.5,
+      "drtg": 119.4,
+      "note": "retooling roster"
+    }
+  },
+  {
+    "abbr": "WAS",
+    "name": "Washington Wizards",
+    "conference": "East",
+    "baseRating": 19,
+    "stats": {
+      "w": 17,
+      "l": 65,
+      "ppg": 106.9,
+      "rpg": 41.5,
+      "apg": 24.1,
+      "ortg": 107.9,
+      "drtg": 120.4,
+      "note": "league-worst record"
+    }
+  }
+]
