@@ -30,7 +30,7 @@ const PlayerRenderer = (() => {
 
  function ensureContainerImage(container, alt){
   if(!container)return null;
-  let img = container.querySelector(":scope > img.player-img");
+  let img = container.querySelector("img.player-img");
   if(!img){
    img = document.createElement("img");
    img.className = "player-img";
@@ -40,11 +40,24 @@ const PlayerRenderer = (() => {
   return img;
  }
 
+ function ensureSprite(container, img){
+  if(!container || !img)return null;
+  let sprite = img.closest(".player-sprite");
+  if(!sprite || sprite.parentElement !== container){
+   sprite = document.createElement("div");
+   sprite.className = "player-sprite";
+   container.insertBefore(sprite, img);
+   sprite.appendChild(img);
+  }
+  return sprite;
+ }
+
  function targetImage(surface){
   const container = surface.container ? document.getElementById(surface.container) : null;
   const img = surface.img ? document.getElementById(surface.img) : ensureContainerImage(container, surface.alt);
+  const host = container || img?.parentElement || null;
   if(img && surface.alt)img.alt = surface.alt;
-  return {container, img};
+  return {container: host, img};
  }
 
  function applyRenderMetadata(el, config, renderState){
@@ -57,19 +70,23 @@ const PlayerRenderer = (() => {
  function renderToSurface(config = {}){
   const normalized = normalizeConfig(config);
   const surface = surfaceFor(normalized);
+  const awardContainer = surface === surfaces.awards ? document.getElementById(surface.container) : null;
+  if(awardContainer && !awardContainer.querySelector(".player-sprite"))awardContainer.innerHTML = "";
   const {container, img} = targetImage(surface);
   if(!img)return;
+  const sprite = ensureSprite(container, img);
 
   img.src = PLAYER_ART_SRC;
-  img.classList.add("player-img");
+  img.classList.add("player-img", "player-layer", "player-base-layer");
+  container?.classList.add("player-render-surface");
+  sprite?.classList.add("player-sprite");
   applyRenderMetadata(img, normalized, surface.state);
   applyRenderMetadata(container, normalized, surface.state);
+  applyRenderMetadata(sprite, normalized, surface.state);
 
   if(surface === surfaces.awards){
    container.classList.remove("cup-photo");
    container.classList.add("award-player-render");
-   container.innerHTML = "";
-   container.appendChild(img);
   }
  }
 

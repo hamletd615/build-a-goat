@@ -712,4 +712,92 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
  .season-detail-player{height:205px}
 }
 
+/* Player renderer sprite contract: one stack, one fit rule, future uniform layers above base. */
+.player-render-surface{
+ --player-fit:contain;
+ --player-position:center center;
+ --player-base-layer:1;
+ --player-jersey-layer:2;
+ --player-shorts-layer:3;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ background:transparent;
+ overflow:visible;
+}
+.player-render-surface .player-sprite{
+ position:relative;
+ width:100%;
+ height:100%;
+ display:grid;
+ place-items:center;
+ isolation:isolate;
+ pointer-events:none;
+}
+.player-render-surface .player-sprite > .player-layer{
+ grid-area:1/1;
+ display:block;
+ width:100%;
+ height:100%;
+ max-width:none;
+ max-height:none;
+ object-fit:var(--player-fit);
+ object-position:var(--player-position);
+ transform:none;
+ transform-origin:center center;
+ background:transparent;
+ position:relative;
+ z-index:var(--player-base-layer);
+}
+.player-wrap.player-render-surface .player-sprite{
+ width:min(760px,100%);
+ height:100%;
+}
+.home-player.player-render-surface .player-sprite,
+.season-player.player-render-surface .player-sprite,
+.season-detail-player.player-render-surface .player-sprite,
+.award-photo.award-player-render.player-render-surface .player-sprite{
+ width:100%;
+ height:100%;
+}
+.season-player.player-render-surface,
+.season-detail-player.player-render-surface{
+ align-items:center;
+ justify-content:center;
+ background:transparent;
+ overflow:visible;
+}
+.award-photo.award-player-render.player-render-surface{
+ width:152px;
+ height:152px;
+ border:0;
+ border-radius:0;
+ background:transparent;
+ box-shadow:none;
+ overflow:visible;
+ padding:0;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+}
+.award-photo.award-player-render.player-render-surface .player-sprite > .player-layer{
+ width:100%;
+ height:100%;
+ max-width:none;
+ max-height:none;
+ transform:none;
+ filter:drop-shadow(0 16px 15px rgba(0,0,0,.48));
+}
+.player-render-surface .player-sprite > .player-base-layer[data-render-state="build"]{
+ opacity:.9;
+ filter:brightness(.48) contrast(.98) saturate(.75) drop-shadow(0 24px 22px rgba(0,0,0,.46));
+}
+.player-render-surface .player-sprite > .player-base-layer[data-render-state="complete"],
+.player-render-surface .player-sprite > .player-base-layer[data-render-state="season"],
+.player-render-surface .player-sprite > .player-base-layer[data-render-state="awards"],
+.player-render-surface .player-sprite > .player-base-layer[data-render-state="results"]{
+ opacity:1;
+ filter:drop-shadow(0 28px 24px rgba(0,0,0,.5));
+}
+
 
