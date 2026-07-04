@@ -7,10 +7,7 @@ function openSeasonMenu(){
  const result=document.getElementById("seasonResult");
  const run=document.getElementById("seasonRunBtn");
  const spin=document.getElementById("seasonSpinBtn");
- const img=document.querySelector("#seasonPlayer img");
-  if(img)img.src=document.getElementById("playerImg").src;
- document.querySelector("#seasonPlayer .season-uniform-logo")?.remove();
- document.getElementById("seasonPlayer")?.style.setProperty("--season-team-color","#67f8dc");
+ renderPlayer("season-preview");
  result.classList.remove("show");
  result.innerHTML="";
  run.disabled=true;
@@ -44,11 +41,8 @@ function spinSeasonTeam(){
 }
 function showSeasonTeam(abbr){
  const t=TEAMS[abbr],r=TEAM_REPORT[abbr]||{score:t.base+40,off:t.base+38,def:t.base+38,note:"season profile"};
- document.getElementById("seasonPlayer")?.style.setProperty("--season-team-color",TEAM_COLORS[abbr]||"#67f8dc");
  const logo=teamLogo(abbr);
- const player=document.getElementById("seasonPlayer");
- player?.querySelector(".season-uniform-logo")?.remove();
- if(logo)player?.insertAdjacentHTML("beforeend",`<img class="season-uniform-logo" src="${logo}" alt="" referrerpolicy="no-referrer">`);
+ renderPlayer("season-preview",{team:abbr});
  const el=document.getElementById("seasonResult");
  el.innerHTML=`${logo?`<img class="season-logo" src="${logo}" alt="${t.name} logo" referrerpolicy="no-referrer">`:`<div class="season-logo"></div>`}<div class="season-team">${t.name}</div><div class="season-meta">${abbr}</div>`;
  el.classList.add("show");
@@ -68,18 +62,7 @@ function openSeasonDetail(abbr){
  document.getElementById("seasonDetailTeam").innerHTML=`${logo?`<img src="${logo}" alt="${t.name} logo" referrerpolicy="no-referrer">`:""}<div class="season-detail-team">${t.name}</div><div class="season-bars"><div class="season-bar"><span>OFF</span><span class="season-bar-line"><i style="width:${r.off}%"></i></span><span class="season-bar-grade">${teamGrade(r.off)}</span></div><div class="season-bar"><span>DEF</span><span class="season-bar-line"><i style="width:${r.def}%"></i></span><span class="season-bar-grade">${teamGrade(r.def)}</span></div></div>`;
  document.getElementById("seasonDetailOvr").innerHTML=`${overall()||0}<small>OVR</small>`;
  document.getElementById("seasonDetailArch").textContent=archetype();
- const img=document.getElementById("seasonDetailImg");
- if(img){
-  const generated=uniformImage(abbr);
-  img.src=generated||document.getElementById("playerImg").src;
-  img.classList.toggle("generated-uniform",!!generated);
- }
- const player=document.getElementById("seasonDetailPlayer");
- player.querySelector(".season-detail-logo")?.remove();
- player.querySelector(".season-uniform-layer")?.remove();
- player.style.setProperty("--season-team-color",primary);
- player.style.setProperty("--season-team-dark",shadeTeam(primary));
- player.style.setProperty("--season-team-trim",trim);
+ renderPlayer("season",{team:abbr});
  document.getElementById("seasonDetailTraits").innerHTML=TRAITS.map(([k,label])=>{
   const s=build[k];
   return `<div class="season-detail-row">${s?photoMarkup(s.headshot,s.player,"mini-photo",s.team):`<div></div>`}<div><b>${label}</b><span>${s?s.player:"-"}</span></div><div class="grade-badge">${s?grade(s.rating):"-"}</div></div>`;
@@ -349,8 +332,7 @@ function openFinalReport(){
  document.getElementById("finalReportOverlay").scrollTop=0;
  document.getElementById("finalReportTeam").innerHTML=`${logo?`<img src="${logo}" alt="${t.name} logo" referrerpolicy="no-referrer">`:""}<div class="season-detail-team">${t.name}</div><div class="season-bars"><div class="season-bar"><span>OFF</span><span class="season-bar-line"><i style="width:${r.off}%"></i></span><span class="season-bar-grade">${teamGrade(r.off)}</span></div><div class="season-bar"><span>DEF</span><span class="season-bar-line"><i style="width:${r.def}%"></i></span><span class="season-bar-grade">${teamGrade(r.def)}</span></div></div>`;
  document.getElementById("finalReportBanner").innerHTML=`<b>${finalReportStatus()}</b><span>${lastRegularSeason.wins}-${lastRegularSeason.losses} Season - OVR ${overall()||0}</span>`;
- const img=document.getElementById("finalReportImg"),generated=uniformImage(add);
- if(img){img.src=generated||document.getElementById("playerImg").src;img.classList.toggle("generated-uniform",!!generated);}
+ renderPlayer("results",{team:add});
  document.getElementById("finalReportProduction").innerHTML=`<div class="production-card"><b>${(tot.pts/82).toFixed(1)}</b><span>Points</span></div><div class="production-card"><b>${(tot.reb/82).toFixed(1)}</b><span>Rebounds</span></div><div class="production-card"><b>${(tot.ast/82).toFixed(1)}</b><span>Assists</span></div><div class="production-card"><b>${(tot.stl/82).toFixed(1)}</b><span>Steals</span></div><div class="production-card"><b>${(tot.blk/82).toFixed(1)}</b><span>Blocks</span></div><div class="production-card"><b>${profile.fg}%</b><span>FG%</span></div><div class="production-card"><b>${profile.three}%</b><span>3PT%</span></div><div class="production-card"><b>${profile.ft}%</b><span>FT%</span></div>`;
  document.getElementById("finalReportTraits").innerHTML=traitRows();
  const best=[...(lastRegularSeason.games||[])].sort((a,b)=>(b.stats.pts+b.stats.reb+b.stats.ast)-(a.stats.pts+a.stats.reb+a.stats.ast))[0];

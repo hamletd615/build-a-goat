@@ -177,6 +177,7 @@ function buildList(){
 
   traitLayer.innerHTML=traitCards();
 
+  renderPlayer(complete?"complete":"build");
   drawCallouts();
 }
 function drawCompleteCallouts(layer){
