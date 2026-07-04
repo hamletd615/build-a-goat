@@ -7,11 +7,7 @@ function openSeasonMenu(){
  const result=document.getElementById("seasonResult");
  const run=document.getElementById("seasonRunBtn");
  const spin=document.getElementById("seasonSpinBtn");
- renderPlayer({
-  state: "season-preview",
-  teamId: "",
-  uniform: "default"
- });
+ document.getElementById("seasonPlayer").innerHTML="";
  result.classList.remove("show");
  result.innerHTML="";
  run.disabled=true;
@@ -46,11 +42,6 @@ function spinSeasonTeam(){
 function showSeasonTeam(abbr){
  const t=TEAMS[abbr],r=TEAM_REPORT[abbr]||{score:t.base+40,off:t.base+38,def:t.base+38,note:"season profile"};
  const logo=teamLogo(abbr);
- renderPlayer({
-  state: "season-preview",
-  teamId: abbr,
-  uniform: "default"
- });
  const el=document.getElementById("seasonResult");
  el.innerHTML=`${logo?`<img class="season-logo" src="${logo}" alt="${t.name} logo" referrerpolicy="no-referrer">`:`<div class="season-logo"></div>`}<div class="season-team">${t.name}</div><div class="season-meta">${abbr}</div>`;
  el.classList.add("show");

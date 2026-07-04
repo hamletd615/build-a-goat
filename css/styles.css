@@ -716,6 +716,8 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
 .player-render-surface{
  --player-fit:contain;
  --player-position:center center;
+ --player-scale:1;
+ --player-max-width:100%;
  --player-base-layer:1;
  --player-jersey-layer:2;
  --player-shorts-layer:3;
@@ -727,8 +729,10 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
 }
 .player-render-surface .player-sprite{
  position:relative;
- width:100%;
- height:100%;
+ width:calc(100% * var(--player-scale));
+ height:calc(100% * var(--player-scale));
+ max-width:100%;
+ max-height:100%;
  display:grid;
  place-items:center;
  isolation:isolate;
@@ -739,26 +743,29 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
  display:block;
  width:100%;
  height:100%;
- max-width:none;
- max-height:none;
+ min-width:0;
+ min-height:0;
+ max-width:100%;
+ max-height:100%;
  object-fit:var(--player-fit);
  object-position:var(--player-position);
  transform:none;
  transform-origin:center center;
  background:transparent;
- position:relative;
+ position:absolute;
+ inset:0;
  z-index:var(--player-base-layer);
 }
 .player-wrap.player-render-surface .player-sprite{
- width:min(760px,100%);
- height:100%;
+ width:min(var(--player-max-width), calc(100% * var(--player-scale)));
+ height:calc(100% * var(--player-scale));
 }
 .home-player.player-render-surface .player-sprite,
 .season-player.player-render-surface .player-sprite,
 .season-detail-player.player-render-surface .player-sprite,
 .award-photo.award-player-render.player-render-surface .player-sprite{
- width:100%;
- height:100%;
+ width:calc(100% * var(--player-scale));
+ height:calc(100% * var(--player-scale));
 }
 .season-player.player-render-surface,
 .season-detail-player.player-render-surface{
@@ -783,10 +790,33 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
 .award-photo.award-player-render.player-render-surface .player-sprite > .player-layer{
  width:100%;
  height:100%;
- max-width:none;
- max-height:none;
+ min-width:0;
+ min-height:0;
+ max-width:100%;
+ max-height:100%;
  transform:none;
  filter:drop-shadow(0 16px 15px rgba(0,0,0,.48));
+}
+.player-render-surface[data-render-state="build"]{
+ --player-scale:.82;
+ --player-max-width:640px;
+}
+.player-wrap.player-render-surface[data-render-state="complete"]{
+ --player-scale:.68;
+ --player-max-width:560px;
+ align-items:center;
+}
+.season-detail-player.player-render-surface[data-render-state="season"]{
+ --player-scale:.8;
+ margin:12px 0 22px;
+}
+.award-photo.award-player-render.player-render-surface[data-render-state="awards"]{
+ --player-scale:.62;
+ margin:8px auto 26px;
+}
+.final-report-player.player-render-surface[data-render-state="results"]{
+ --player-scale:.76;
+ margin:16px auto 28px;
 }
 .player-render-surface .player-sprite > .player-base-layer[data-render-state="build"]{
  opacity:.9;

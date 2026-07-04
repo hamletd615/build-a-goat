@@ -7,7 +7,6 @@ const PlayerRenderer = (() => {
   home: {container: "homePlayer", state: "home", alt: "Build-A-GOAT player"},
   build: {img: "playerImg", state: "build", alt: "Build player"},
   complete: {img: "playerImg", state: "complete", alt: "Completed build player"},
-  "season-preview": {container: "seasonPlayer", state: "season", alt: "Season preview player"},
   season: {img: "seasonDetailImg", container: "seasonDetailPlayer", state: "season", alt: "Season build player"},
   awards: {container: "awardPhoto", state: "awards", alt: "Award player"},
   results: {img: "finalReportImg", container: "finalReportPlayer", state: "results", alt: "Final report player"}
@@ -55,7 +54,7 @@ const PlayerRenderer = (() => {
  function targetImage(surface){
   const container = surface.container ? document.getElementById(surface.container) : null;
   const img = surface.img ? document.getElementById(surface.img) : ensureContainerImage(container, surface.alt);
-  const host = container || img?.parentElement || null;
+  const host = container || img?.closest(".player-render-surface") || img?.parentElement || null;
   if(img && surface.alt)img.alt = surface.alt;
   return {container: host, img};
  }
