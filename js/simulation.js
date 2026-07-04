@@ -7,7 +7,11 @@ function openSeasonMenu(){
  const result=document.getElementById("seasonResult");
  const run=document.getElementById("seasonRunBtn");
  const spin=document.getElementById("seasonSpinBtn");
- renderPlayer("season-preview");
+ renderPlayer({
+  state: "season-preview",
+  teamId: "",
+  uniform: "default"
+ });
  result.classList.remove("show");
  result.innerHTML="";
  run.disabled=true;
@@ -42,7 +46,11 @@ function spinSeasonTeam(){
 function showSeasonTeam(abbr){
  const t=TEAMS[abbr],r=TEAM_REPORT[abbr]||{score:t.base+40,off:t.base+38,def:t.base+38,note:"season profile"};
  const logo=teamLogo(abbr);
- renderPlayer("season-preview",{team:abbr});
+ renderPlayer({
+  state: "season-preview",
+  teamId: abbr,
+  uniform: "default"
+ });
  const el=document.getElementById("seasonResult");
  el.innerHTML=`${logo?`<img class="season-logo" src="${logo}" alt="${t.name} logo" referrerpolicy="no-referrer">`:`<div class="season-logo"></div>`}<div class="season-team">${t.name}</div><div class="season-meta">${abbr}</div>`;
  el.classList.add("show");
@@ -51,18 +59,17 @@ function openSeasonDetail(abbr){
  if(!abbr)return;
  const t=TEAMS[abbr],r=TEAM_REPORT[abbr]||{score:t.base+40,off:t.base+38,def:t.base+38,note:"season profile"};
  const logo=teamLogo(abbr);
- const primary=TEAM_COLORS[abbr]||"#67f8dc";
- const trim=TEAM_TRIMS[abbr]||"#f8fafc";
  document.getElementById("seasonOverlay").classList.remove("open");
  document.getElementById("seasonDetailOverlay").classList.add("open");
  document.getElementById("seasonDetailOverlay").scrollTop=0;
- document.getElementById("seasonDetailOverlay").style.setProperty("--season-team-color",primary);
- document.getElementById("seasonDetailOverlay").style.setProperty("--season-team-dark",shadeTeam(primary));
- document.getElementById("seasonDetailOverlay").style.setProperty("--season-team-trim",trim);
  document.getElementById("seasonDetailTeam").innerHTML=`${logo?`<img src="${logo}" alt="${t.name} logo" referrerpolicy="no-referrer">`:""}<div class="season-detail-team">${t.name}</div><div class="season-bars"><div class="season-bar"><span>OFF</span><span class="season-bar-line"><i style="width:${r.off}%"></i></span><span class="season-bar-grade">${teamGrade(r.off)}</span></div><div class="season-bar"><span>DEF</span><span class="season-bar-line"><i style="width:${r.def}%"></i></span><span class="season-bar-grade">${teamGrade(r.def)}</span></div></div>`;
  document.getElementById("seasonDetailOvr").innerHTML=`${overall()||0}<small>OVR</small>`;
  document.getElementById("seasonDetailArch").textContent=archetype();
- renderPlayer("season",{team:abbr});
+ renderPlayer({
+  state: "season",
+  teamId: abbr,
+  uniform: "default"
+ });
  document.getElementById("seasonDetailTraits").innerHTML=TRAITS.map(([k,label])=>{
   const s=build[k];
   return `<div class="season-detail-row">${s?photoMarkup(s.headshot,s.player,"mini-photo",s.team):`<div></div>`}<div><b>${label}</b><span>${s?s.player:"-"}</span></div><div class="grade-badge">${s?grade(s.rating):"-"}</div></div>`;
@@ -182,12 +189,8 @@ function awardPhotoFor(name){
   const p=all.find(x=>x.name===name)||all.find(x=>x.player===name);
   return p?.headshot||"";
 }
-function buildAwardPhoto(){
- const pick=build.shooting||build.handling||build.iq||build.speed||Object.values(build)[0];
- return pick?.headshot||"";
-}
-function awardCard(type,title,name,abbr,stats,photo){
-  return {type,title,name,abbr,stats,photo:photo||awardPhotoFor(name)};
+function awardCard(type,title,name,abbr,stats,photo,renderPlayerAward){
+  return {type,title,name,abbr,stats,photo:photo||awardPhotoFor(name),renderPlayerAward:!!renderPlayerAward};
 }
 function awardRand(type,items){
  const recent=recentAwardWinners[type]||[];
@@ -250,15 +253,15 @@ function buildAwards(){
  const cards=[];
  if(lastRegularSeason?.cup?.champion){
   cards.push(awardCard("NBA Cup","NBA Cup Champion",team,add,{Result:`Beat ${TEAMS[lastRegularSeason.cup.opp]?.name||lastRegularSeason.cup.opp}`,"Cup Record":"7-0","Build OVR":overall()},cupChampionArt(add)));
-  cards.push(awardCard("NBA Cup","NBA Cup MVP",buildName,add,{Points:`${Math.max(18,ppg+2).toFixed(1)} PPG`,Rebounds:`${(rpg+.7).toFixed(1)} RPG`,Assists:`${(apg+.8).toFixed(1)} APG`,"FG %":`${Math.min(66,p.fg+2)}%`},teamLogo(add)));
+  cards.push(awardCard("NBA Cup","NBA Cup MVP",buildName,add,{Points:`${Math.max(18,ppg+2).toFixed(1)} PPG`,Rebounds:`${(rpg+.7).toFixed(1)} RPG`,Assists:`${(apg+.8).toFixed(1)} APG`,"FG %":`${Math.min(66,p.fg+2)}%`},null,true));
  }else{
   cards.push(awardRand("cup",cupFallback));
  }
- cards.push(mvpBuild?awardCard("NBA Regular Season","MVP Award",buildName,add,buildStats,buildAwardPhoto()):awardRand("mvp",mvpFallback));
- cards.push(dpoyBuild?awardCard("NBA Regular Season","DPOY Award",buildName,add,{Record:`${wins}-${lastRegularSeason?.losses||0}`,Steals:`${spg.toFixed(1)} SPG`,Blocks:`${bpg.toFixed(1)} BPG`,Rebounds:`${rpg.toFixed(1)} RPG`,"DEF Grade":grade(build.defense?.rating||80)},buildAwardPhoto()):awardRand("dpoy",dpoyFallback));
+ cards.push(mvpBuild?awardCard("NBA Regular Season","MVP Award",buildName,add,buildStats,null,true):awardRand("mvp",mvpFallback));
+ cards.push(dpoyBuild?awardCard("NBA Regular Season","DPOY Award",buildName,add,{Record:`${wins}-${lastRegularSeason?.losses||0}`,Steals:`${spg.toFixed(1)} SPG`,Blocks:`${bpg.toFixed(1)} BPG`,Rebounds:`${rpg.toFixed(1)} RPG`,"DEF Grade":grade(build.defense?.rating||80)},null,true):awardRand("dpoy",dpoyFallback));
  if(lastPlayoffRun?.champion){
   cards.push(awardCard("NBA Finals","Champion",team,add,{Record:`${lastRegularSeason?.wins||0}-${lastRegularSeason?.losses||0}`,"Playoff Result":"Won NBA Finals","Series Wins":"4","Build OVR":overall()},teamLogo(add)));
-  cards.push(awardCard("NBA Finals","Finals MVP",buildName,add,{Points:`${Math.max(22,(tot.pts/82)+3).toFixed(1)} PPG`,Rebounds:`${(tot.reb/82).toFixed(1)} RPG`,Assists:`${(tot.ast/82).toFixed(1)} APG`,"FG %":`${Math.min(65,p.fg+2)}%`},buildAwardPhoto()));
+  cards.push(awardCard("NBA Finals","Finals MVP",buildName,add,{Points:`${Math.max(22,(tot.pts/82)+3).toFixed(1)} PPG`,Rebounds:`${(tot.reb/82).toFixed(1)} RPG`,Assists:`${(tot.ast/82).toFixed(1)} APG`,"FG %":`${Math.min(65,p.fg+2)}%`},null,true));
  }
  return cards;
 }
@@ -278,8 +281,20 @@ function renderAward(){
  document.getElementById("awardTitle").textContent=card.title;
  const awardPhoto=document.getElementById("awardPhoto");
  const custom=typeof card.photo==="string"&&card.photo.trim().startsWith("<");
- awardPhoto.classList.toggle("cup-photo",custom);
- awardPhoto.innerHTML=custom?card.photo:photoLayers(card.photo,card.name,card.abbr);
+ awardPhoto.classList.toggle("cup-photo",custom&&!card.renderPlayerAward);
+ if(custom&&!card.renderPlayerAward){
+  awardPhoto.classList.remove("award-player-render");
+  awardPhoto.removeAttribute("data-render-state");
+  awardPhoto.removeAttribute("data-team-id");
+  awardPhoto.removeAttribute("data-uniform");
+  awardPhoto.innerHTML=card.photo;
+ }else{
+  renderPlayer({
+   state: "awards",
+   teamId: card.abbr,
+   uniform: "default"
+  });
+ }
  document.getElementById("awardPlayer").textContent=card.name;
  document.getElementById("awardTeam").textContent=card.abbr;
  document.getElementById("awardStats").innerHTML=Object.entries(card.stats).map(([k,v])=>`<div class="award-stat"><span>${k}</span><b>${v}</b></div>`).join("");
@@ -332,7 +347,11 @@ function openFinalReport(){
  document.getElementById("finalReportOverlay").scrollTop=0;
  document.getElementById("finalReportTeam").innerHTML=`${logo?`<img src="${logo}" alt="${t.name} logo" referrerpolicy="no-referrer">`:""}<div class="season-detail-team">${t.name}</div><div class="season-bars"><div class="season-bar"><span>OFF</span><span class="season-bar-line"><i style="width:${r.off}%"></i></span><span class="season-bar-grade">${teamGrade(r.off)}</span></div><div class="season-bar"><span>DEF</span><span class="season-bar-line"><i style="width:${r.def}%"></i></span><span class="season-bar-grade">${teamGrade(r.def)}</span></div></div>`;
  document.getElementById("finalReportBanner").innerHTML=`<b>${finalReportStatus()}</b><span>${lastRegularSeason.wins}-${lastRegularSeason.losses} Season - OVR ${overall()||0}</span>`;
- renderPlayer("results",{team:add});
+ renderPlayer({
+  state: "results",
+  teamId: add,
+  uniform: "default"
+ });
  document.getElementById("finalReportProduction").innerHTML=`<div class="production-card"><b>${(tot.pts/82).toFixed(1)}</b><span>Points</span></div><div class="production-card"><b>${(tot.reb/82).toFixed(1)}</b><span>Rebounds</span></div><div class="production-card"><b>${(tot.ast/82).toFixed(1)}</b><span>Assists</span></div><div class="production-card"><b>${(tot.stl/82).toFixed(1)}</b><span>Steals</span></div><div class="production-card"><b>${(tot.blk/82).toFixed(1)}</b><span>Blocks</span></div><div class="production-card"><b>${profile.fg}%</b><span>FG%</span></div><div class="production-card"><b>${profile.three}%</b><span>3PT%</span></div><div class="production-card"><b>${profile.ft}%</b><span>FT%</span></div>`;
  document.getElementById("finalReportTraits").innerHTML=traitRows();
  const best=[...(lastRegularSeason.games||[])].sort((a,b)=>(b.stats.pts+b.stats.reb+b.stats.ast)-(a.stats.pts+a.stats.reb+a.stats.ast))[0];

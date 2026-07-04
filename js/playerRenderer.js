@@ -1,81 +1,81 @@
-// Single player renderer for build, completed build, season, and results surfaces.
+// Single player renderer for every build, season, award, and results surface.
 const PlayerRenderer = (() => {
- let basePlayerSrc = "";
+ const PLAYER_ART_SRC = "./assets/player/base-player.png";
+ const DEFAULT_UNIFORM = "default";
 
- function baseImage(){
-  if(basePlayerSrc)return basePlayerSrc;
-  basePlayerSrc = document.getElementById("playerImg")?.getAttribute("src") || "";
-  return basePlayerSrc;
+ const surfaces = {
+  home: {container: "homePlayer", state: "home", alt: "Build-A-GOAT player"},
+  build: {img: "playerImg", state: "build", alt: "Build player"},
+  complete: {img: "playerImg", state: "complete", alt: "Completed build player"},
+  "season-preview": {container: "seasonPlayer", state: "season", alt: "Season preview player"},
+  season: {img: "seasonDetailImg", container: "seasonDetailPlayer", state: "season", alt: "Season build player"},
+  awards: {container: "awardPhoto", state: "awards", alt: "Award player"},
+  results: {img: "finalReportImg", container: "finalReportPlayer", state: "results", alt: "Final report player"}
+ };
+
+ function normalizeConfig(config = {}){
+  const state = config.state || "build";
+  return {
+   state,
+   teamId: config.teamId || "",
+   uniform: config.uniform || DEFAULT_UNIFORM,
+   surface: config.surface || ""
+  };
  }
 
- function setImage(img, src, generated){
+ function surfaceFor(config){
+  if(config.surface === "award" || config.surface === "awards")return surfaces.awards;
+  return surfaces[config.state] || surfaces.build;
+ }
+
+ function ensureContainerImage(container, alt){
+  if(!container)return null;
+  let img = container.querySelector(":scope > img.player-img");
+  if(!img){
+   img = document.createElement("img");
+   img.className = "player-img";
+   container.appendChild(img);
+  }
+  img.alt = alt;
+  return img;
+ }
+
+ function targetImage(surface){
+  const container = surface.container ? document.getElementById(surface.container) : null;
+  const img = surface.img ? document.getElementById(surface.img) : ensureContainerImage(container, surface.alt);
+  if(img && surface.alt)img.alt = surface.alt;
+  return {container, img};
+ }
+
+ function applyRenderMetadata(el, config, renderState){
+  if(!el)return;
+  el.dataset.renderState = renderState;
+  el.dataset.teamId = config.teamId;
+  el.dataset.uniform = config.uniform;
+ }
+
+ function renderToSurface(config = {}){
+  const normalized = normalizeConfig(config);
+  const surface = surfaceFor(normalized);
+  const {container, img} = targetImage(surface);
   if(!img)return;
-  const nextSrc = src || baseImage();
-  if(nextSrc && img.getAttribute("src") !== nextSrc)img.src = nextSrc;
-  img.classList.toggle("generated-uniform", !!generated);
- }
 
- function renderBuildLike(state){
-  const img = document.getElementById("playerImg");
-  setImage(img, baseImage(), false);
-  img?.setAttribute("data-render-state", state);
- }
+  img.src = PLAYER_ART_SRC;
+  img.classList.add("player-img");
+  applyRenderMetadata(img, normalized, surface.state);
+  applyRenderMetadata(container, normalized, surface.state);
 
- function renderSeasonPreview(team){
-  const player = document.getElementById("seasonPlayer");
-  const img = player?.querySelector("img.player-img");
-  setImage(img, baseImage(), false);
-  player?.setAttribute("data-render-state", "season");
-  player?.style.setProperty("--season-team-color", team ? (TEAM_COLORS[team] || "#67f8dc") : "#67f8dc");
-  player?.querySelector(".season-uniform-logo")?.remove();
-
-  const logo = team ? teamLogo(team) : "";
-  if(logo)player?.insertAdjacentHTML("beforeend", `<img class="season-uniform-logo" src="${logo}" alt="" referrerpolicy="no-referrer">`);
- }
-
- function renderSeasonDetail(team){
-  const generated = team ? uniformImage(team) : "";
-  const img = document.getElementById("seasonDetailImg");
-  setImage(img, generated || baseImage(), !!generated);
-
-  const player = document.getElementById("seasonDetailPlayer");
-  player?.setAttribute("data-render-state", "season");
-  player?.style.setProperty("--season-team-color", team ? (TEAM_COLORS[team] || "#67f8dc") : "#67f8dc");
-  player?.style.setProperty("--season-team-dark", team ? shadeTeam(TEAM_COLORS[team] || "#67f8dc") : shadeTeam("#67f8dc"));
-  player?.style.setProperty("--season-team-trim", team ? (TEAM_TRIMS[team] || "#f8fafc") : "#f8fafc");
-  player?.querySelector(".season-detail-logo")?.remove();
-  player?.querySelector(".season-uniform-layer")?.remove();
- }
-
- function renderResults(team){
-  const generated = team ? uniformImage(team) : "";
-  const img = document.getElementById("finalReportImg");
-  setImage(img, generated || baseImage(), !!generated);
-  document.getElementById("finalReportPlayer")?.setAttribute("data-render-state", "results");
- }
-
- function renderPlayer(state, options = {}){
-  const team = options.team || options.abbr || "";
-  if(state === "build" || state === "complete"){
-   renderBuildLike(state);
-   return;
-  }
-  if(state === "season-preview"){
-   renderSeasonPreview(team);
-   return;
-  }
-  if(state === "season"){
-   renderSeasonDetail(team);
-   return;
-  }
-  if(state === "results"){
-   renderResults(team);
+  if(surface === surfaces.awards){
+   container.classList.remove("cup-photo");
+   container.classList.add("award-player-render");
+   container.innerHTML = "";
+   container.appendChild(img);
   }
  }
 
- return {render: renderPlayer, baseImage};
+ return {render: renderToSurface, playerArtSrc: PLAYER_ART_SRC};
 })();
 
-function renderPlayer(state, options){
- return PlayerRenderer.render(state, options);
+function renderPlayer(config){
+ return PlayerRenderer.render(config);
 }

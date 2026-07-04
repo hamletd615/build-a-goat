@@ -177,7 +177,11 @@ function buildList(){
 
   traitLayer.innerHTML=traitCards();
 
-  renderPlayer(complete?"complete":"build");
+  renderPlayer({
+   state: complete ? "complete" : "build",
+   teamId: "",
+   uniform: "default"
+  });
   drawCallouts();
 }
 function drawCompleteCallouts(layer){

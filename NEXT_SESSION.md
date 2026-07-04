@@ -55,11 +55,11 @@ Check:
 - playerRenderer.js
 - anchorEditor.js
 - bodyAnchorMap()
-- old player-model.png references
+- legacy player asset references
 - completed build player rendering
 - season simulation player rendering
 - duplicate anchor systems
-- duplicate player renderers
+- single player renderer coverage
 
 ---
 
