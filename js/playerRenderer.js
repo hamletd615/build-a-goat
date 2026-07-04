@@ -14,10 +14,11 @@ const PlayerRenderer = (() => {
 
  function normalizeConfig(config = {}){
   const state = config.state || "build";
+  const teamId = config.teamId || "";
   return {
    state,
-   teamId: config.teamId || "",
-   uniform: config.uniform || DEFAULT_UNIFORM,
+   teamId,
+   uniform: config.uniform || (teamId ? "team" : DEFAULT_UNIFORM),
    surface: config.surface || ""
   };
  }
@@ -51,6 +52,26 @@ const PlayerRenderer = (() => {
   return sprite;
  }
 
+ function ensureUniformLayer(sprite, className, label){
+  let layer=sprite.querySelector(`.${className}`);
+  if(!layer){
+   layer=document.createElement("div");
+   layer.className=`player-layer uniform-layer ${className}`;
+   layer.setAttribute("aria-hidden","true");
+   if(label)layer.textContent=label;
+   sprite.appendChild(layer);
+  }
+  if(label!=null)layer.textContent=label;
+  return layer;
+ }
+
+ function uniformColors(config){
+  const useTeam=config.uniform === "team" && config.teamId;
+  const primary=(useTeam && TEAM_COLORS?.[config.teamId]) || "#2f3339";
+  const trim=(useTeam && TEAM_TRIMS?.[config.teamId]) || (useTeam ? "#f8fafc" : "#5c6470");
+  return {primary, trim};
+ }
+
  function targetImage(surface){
   const container = surface.container ? document.getElementById(surface.container) : null;
   const img = surface.img ? document.getElementById(surface.img) : ensureContainerImage(container, surface.alt);
@@ -74,11 +95,18 @@ const PlayerRenderer = (() => {
   const {container, img} = targetImage(surface);
   if(!img)return;
   const sprite = ensureSprite(container, img);
+  const colors=uniformColors(normalized);
 
   img.src = PLAYER_ART_SRC;
   img.classList.add("player-img", "player-layer", "player-base-layer");
+  ensureUniformLayer(sprite, "uniform-jersey-layer");
+  ensureUniformLayer(sprite, "uniform-shorts-layer");
+  ensureUniformLayer(sprite, "uniform-trim-layer");
+  ensureUniformLayer(sprite, "uniform-logo-layer", "");
   container?.classList.add("player-render-surface");
   sprite?.classList.add("player-sprite");
+  sprite?.style.setProperty("--uniform-primary",colors.primary);
+  sprite?.style.setProperty("--uniform-trim",colors.trim);
   applyRenderMetadata(img, normalized, surface.state);
   applyRenderMetadata(container, normalized, surface.state);
   applyRenderMetadata(sprite, normalized, surface.state);

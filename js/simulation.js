@@ -59,7 +59,7 @@ function openSeasonDetail(abbr){
  renderPlayer({
   state: "season",
   teamId: abbr,
-  uniform: "default"
+  uniform: "team"
  });
  document.getElementById("seasonDetailTraits").innerHTML=TRAITS.map(([k,label])=>{
   const s=build[k];
@@ -272,19 +272,32 @@ function renderAward(){
  document.getElementById("awardTitle").textContent=card.title;
  const awardPhoto=document.getElementById("awardPhoto");
  const custom=typeof card.photo==="string"&&card.photo.trim().startsWith("<");
- awardPhoto.classList.toggle("cup-photo",custom&&!card.renderPlayerAward);
- if(custom&&!card.renderPlayerAward){
-  awardPhoto.classList.remove("award-player-render");
+ const teamOnly=card.type==="NBA Finals"&&card.title==="Champion";
+ awardPhoto.classList.remove("award-player-render","player-render-surface","cup-photo","team-logo-award");
+ if(card.renderPlayerAward){
+  renderPlayer({
+   state: "awards",
+   teamId: card.abbr,
+   uniform: "team"
+  });
+ }else if(teamOnly){
+  awardPhoto.classList.add("team-logo-award");
+  awardPhoto.removeAttribute("data-render-state");
+  awardPhoto.removeAttribute("data-team-id");
+  awardPhoto.removeAttribute("data-uniform");
+  const logo=teamLogo(card.abbr);
+  awardPhoto.innerHTML=logo?`<img class="award-team-logo" src="${logo}" alt="${card.name} logo" referrerpolicy="no-referrer">`:`<span class="photo-initials">${card.abbr}</span>`;
+ }else if(custom){
+  awardPhoto.classList.add("cup-photo");
   awardPhoto.removeAttribute("data-render-state");
   awardPhoto.removeAttribute("data-team-id");
   awardPhoto.removeAttribute("data-uniform");
   awardPhoto.innerHTML=card.photo;
  }else{
-  renderPlayer({
-   state: "awards",
-   teamId: card.abbr,
-   uniform: "default"
-  });
+  awardPhoto.removeAttribute("data-render-state");
+  awardPhoto.removeAttribute("data-team-id");
+  awardPhoto.removeAttribute("data-uniform");
+  awardPhoto.innerHTML=photoLayers(card.photo,card.name,card.abbr);
  }
  document.getElementById("awardPlayer").textContent=card.name;
  document.getElementById("awardTeam").textContent=card.abbr;
@@ -302,6 +315,7 @@ function prevAward(){
 function closeFinalReport(){
  document.getElementById("finalReportOverlay")?.classList.remove("open");
  document.getElementById("app")?.classList.remove("hidden");
+ render();
  setResultButton();
  window.scrollTo(0,0);
 }
@@ -338,11 +352,11 @@ function openFinalReport(){
  document.getElementById("finalReportOverlay").scrollTop=0;
  document.getElementById("finalReportTeam").innerHTML=`${logo?`<img src="${logo}" alt="${t.name} logo" referrerpolicy="no-referrer">`:""}<div class="season-detail-team">${t.name}</div><div class="season-bars"><div class="season-bar"><span>OFF</span><span class="season-bar-line"><i style="width:${r.off}%"></i></span><span class="season-bar-grade">${teamGrade(r.off)}</span></div><div class="season-bar"><span>DEF</span><span class="season-bar-line"><i style="width:${r.def}%"></i></span><span class="season-bar-grade">${teamGrade(r.def)}</span></div></div>`;
  document.getElementById("finalReportBanner").innerHTML=`<b>${finalReportStatus()}</b><span>${lastRegularSeason.wins}-${lastRegularSeason.losses} Season - OVR ${overall()||0}</span>`;
- renderPlayer({
-  state: "results",
-  teamId: add,
-  uniform: "default"
- });
+renderPlayer({
+ state: "results",
+ teamId: add,
+ uniform: "team"
+});
  document.getElementById("finalReportProduction").innerHTML=`<div class="production-card"><b>${(tot.pts/82).toFixed(1)}</b><span>Points</span></div><div class="production-card"><b>${(tot.reb/82).toFixed(1)}</b><span>Rebounds</span></div><div class="production-card"><b>${(tot.ast/82).toFixed(1)}</b><span>Assists</span></div><div class="production-card"><b>${(tot.stl/82).toFixed(1)}</b><span>Steals</span></div><div class="production-card"><b>${(tot.blk/82).toFixed(1)}</b><span>Blocks</span></div><div class="production-card"><b>${profile.fg}%</b><span>FG%</span></div><div class="production-card"><b>${profile.three}%</b><span>3PT%</span></div><div class="production-card"><b>${profile.ft}%</b><span>FT%</span></div>`;
  document.getElementById("finalReportTraits").innerHTML=traitRows();
  const best=[...(lastRegularSeason.games||[])].sort((a,b)=>(b.stats.pts+b.stats.reb+b.stats.ast)-(a.stats.pts+a.stats.reb+a.stats.ast))[0];

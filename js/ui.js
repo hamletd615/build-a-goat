@@ -78,6 +78,7 @@ function buildName(){
  document.getElementById("tabSkill").classList.toggle("active",tab==="skill");
 
  render();
+ renderAnchorEditor?.();
 }
 function traitCards(){
  const stageTraits={
@@ -177,69 +178,41 @@ function buildList(){
 
   traitLayer.innerHTML=traitCards();
 
+  const renderTeamId=selectedSeasonTeam || lastRegularSeason?.team || simTeam || "";
   renderPlayer({
    state: complete ? "complete" : "build",
-   teamId: "",
-   uniform: "default"
+   teamId: renderTeamId,
+   uniform: renderTeamId ? "team" : "default"
   });
   drawCallouts();
+  renderAnchorEditor?.();
 }
-function drawCompleteCallouts(layer){
+function drawAnchoredCallouts(layer){
  const stage=document.getElementById("stage");
  const sr=stage.getBoundingClientRect();
  const w=layer.clientWidth||sr.width;
  const h=layer.clientHeight||sr.height;
- const anchors={
-  iq:[.517,.263],
-  shooting:[.432,.389],
-  handling:[.376,.504],
-  speed:[.439,.559],
-  clutch:[.532,.377],
-  leadership:[.481,.370],
-  rebounding:[.568,.420],
-  size:[.509,.442],
-  defense:[.563,.551]
- };
- const side={
-  iq:"left",
-  shooting:"left",
-  handling:"left",
-  speed:"left",
-  clutch:"right",
-  leadership:"right",
-  rebounding:"right",
-  size:"right",
-  defense:"right"
- };
- const rowOffset={
-  iq:.58,
-  shooting:.58,
-  handling:.58,
-  speed:.58,
-  clutch:.58,
-  leadership:.58,
-  rebounding:.58,
-  size:.42,
-  defense:.42
- };
+ const anchors=bodyAnchorMap();
+ const complete=stage?.classList.contains("complete");
+ const keys=complete?Object.keys(anchors):(TAB_TRAITS[activeStageTab]||TAB_TRAITS.physical);
  const pathFor=(key)=>{
   const card=document.querySelector(`.tc-${key}`);
   const a=anchors[key];
   if(!card||!a)return"";
   const cr=card.getBoundingClientRect();
-  const fromLeft=side[key]==="left";
+  const fromLeft=TRAIT_CARD_SIDES[key]==="left";
   const sx=(fromLeft?cr.right:cr.left)-sr.left;
-  const sy=(cr.top-sr.top)+(cr.height*(rowOffset[key]||.5));
+  const sy=(cr.top-sr.top)+(cr.height*(TRAIT_CARD_ROW_OFFSET[key]||.5));
   const ex=a[0]*w;
   const ey=a[1]*h;
   const elbow=fromLeft?Math.min(sx+180,ex-28):Math.max(sx-180,ex+28);
   return `<path d="M${sx.toFixed(1)} ${sy.toFixed(1)} L${elbow.toFixed(1)} ${sy.toFixed(1)} L${ex.toFixed(1)} ${ey.toFixed(1)}"></path>`;
  };
  const circleFor=([x,y])=>`<circle cx="${(x*w).toFixed(1)}" cy="${(y*h).toFixed(1)}" r="5.5"></circle>`;
- const keys=["iq","shooting","handling","speed","clutch","leadership","rebounding","size","defense"];
  const seen=[];
  keys.forEach(k=>{
   const p=anchors[k];
+  if(!p)return;
   if(!seen.some(q=>Math.abs(q[0]-p[0])<.001&&Math.abs(q[1]-p[1])<.001))seen.push(p);
  });
  layer.innerHTML=`<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">
@@ -250,53 +223,7 @@ function drawCompleteCallouts(layer){
 function drawCallouts(){
  const layer=document.getElementById("callouts");
  if(!layer)return;
-
- const red="#f97316";
- const green="#38bdf8";
- const line=(key)=>build[key]?green:red;
- const glow=(key)=>build[key]?"rgba(56,189,248,.35)":"rgba(249,115,22,.32)";
- const complete=document.getElementById("stage")?.classList.contains("complete");
-
-  if(complete){
-   drawCompleteCallouts(layer);
-   return;
-  }
-
- const paths={
-  physical:`
-   <path d="M33.1 70.8 L38.0 70.8 L42.1 64.3" style="stroke:${line("speed")}"></path>
-   <circle cx="42.1" cy="64.3" r=".65" style="fill:${line("speed")};stroke:${glow("speed")}"></circle>
-
-   <path d="M66.9 55.8 L57.5 55.8 L51.4 46.3" style="stroke:${line("size")}"></path>
-   <circle cx="51.4" cy="46.3" r=".65" style="fill:${line("size")};stroke:${glow("size")}"></circle>
-
-   <path d="M66.9 69.2 L61.5 69.2 L57.3 48.5" style="stroke:${line("defense")}"></path>
-   <circle cx="57.3" cy="48.5" r=".65" style="fill:${line("defense")};stroke:${glow("defense")}"></circle>
-  `,
-     mental:`
-   <path d="M33.1 33.2 L38.5 33.2 L52.4 29.2" style="stroke:${line("iq")}"></path>
-   <circle cx="52.4" cy="29.2" r=".65" style="fill:${line("iq")};stroke:${glow("iq")}"></circle>
-
-   <path d="M66.9 49.8 L58.0 49.8 L53.6 47.0 L53.6 40.0" style="stroke:${line("clutch")}"></path>
-   <circle cx="53.6" cy="40.0" r=".65" style="fill:${line("clutch")};stroke:${glow("clutch")}"></circle>
-
-   <path d="M33.1 49.8 L40.0 49.8 L48.5 40.5" style="stroke:${line("leadership")}"></path>
-   <circle cx="48.5" cy="40.5" r=".65" style="fill:${line("leadership")};stroke:${glow("leadership")}"></circle>
-  `,
-  skill:`
-   <path d="M33.1 33.2 L38.0 33.2 L43.6 40.5" style="stroke:${line("shooting")}"></path>
-   <circle cx="43.6" cy="40.5" r=".65" style="fill:${line("shooting")};stroke:${glow("shooting")}"></circle>
-
-   <path d="M33.1 49.8 L38.2 49.8" style="stroke:${line("handling")}"></path>
-   <circle cx="38.2" cy="49.8" r=".65" style="fill:${line("handling")};stroke:${glow("handling")}"></circle>
-
-      <path d="M66.9 69.2 L61.0 69.2 L57.6 64.0 L57.6 59.2" style="stroke:${line("rebounding")}"></path>
-   <circle cx="57.6" cy="59.2" r=".65" style="fill:${line("rebounding")};stroke:${glow("rebounding")}"></circle>
-  `
- };
-
- layer.innerHTML=`<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-  ${paths[activeStageTab]}
- </svg>`;
+ drawAnchoredCallouts(layer);
+ if(!window.isAnchorDragging)renderAnchorEditor?.();
 }
 
