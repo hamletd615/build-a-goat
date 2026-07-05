@@ -4,6 +4,7 @@ const PlayerRenderer = (() => {
  const TEAM_PLAYER_ASSET_ROOT = "./assets/teamPlayers";
  const TEAM_PLAYER_ASSETS = new Set(["CHI"]);
  const TEAM_PLAYER_ASSET_STATUS = {};
+ const TEAM_PLAYER_ASSET_WAITERS = {};
  const UNIFORM_ASSET_ROOT = "./assets/uniforms";
  const DEFAULT_UNIFORM = "default";
  const POST_BUILD_UNIFORM_STATES = new Set(["complete", "season", "awards", "results"]);
@@ -90,19 +91,27 @@ const PlayerRenderer = (() => {
   const id=normalizedTeamId(teamId);
   const src=teamPlayerAssetPath(id);
   if(!src)return;
-  if(TEAM_PLAYER_ASSET_STATUS[id] === "loaded"){
-   onReady(src);
-   return;
-  }
-  if(TEAM_PLAYER_ASSET_STATUS[id] === "loading" || TEAM_PLAYER_ASSET_STATUS[id] === "missing")return;
+ if(TEAM_PLAYER_ASSET_STATUS[id] === "loaded"){
+  onReady(src);
+  return;
+ }
+ if(TEAM_PLAYER_ASSET_STATUS[id] === "loading"){
+  TEAM_PLAYER_ASSET_WAITERS[id].push(onReady);
+  return;
+ }
+ if(TEAM_PLAYER_ASSET_STATUS[id] === "missing")return;
   TEAM_PLAYER_ASSET_STATUS[id] = "loading";
+  TEAM_PLAYER_ASSET_WAITERS[id] = [onReady];
   const testImage = new Image();
   testImage.onload = () => {
    TEAM_PLAYER_ASSET_STATUS[id] = "loaded";
-   onReady(src);
+   const waiters=TEAM_PLAYER_ASSET_WAITERS[id]||[];
+   delete TEAM_PLAYER_ASSET_WAITERS[id];
+   waiters.forEach(callback=>callback(src));
   };
   testImage.onerror = () => {
    TEAM_PLAYER_ASSET_STATUS[id] = "missing";
+   delete TEAM_PLAYER_ASSET_WAITERS[id];
   };
   testImage.src = src;
  }

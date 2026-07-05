@@ -21,14 +21,27 @@
   const seasonDetailOverlay=document.getElementById("seasonDetailOverlay");
   const spin=document.getElementById("seasonSpinBtn");
   const run=document.getElementById("seasonRunBtn");
+  const result=document.getElementById("seasonResult");
+  const reel=document.getElementById("seasonTeamReel");
+
+  if(spin){
+   spin.disabled=false;
+   spin.classList.add("hidden");
+  }
+
+  if(run)run.disabled=false;
+
+  if(result)result.classList.remove("show");
+
+  if(reel){
+   reel.className="season-reel";
+   reel.style.transition="none";
+   reel.style.transform=`translateY(${reelCenterOffset(reel)}px)`;
+  }
 
   if(seasonOverlay?.classList.contains("open")&&typeof showSeasonTeam==="function"){
    showSeasonTeam(CHICAGO_TEAM_ID);
-   if(spin){
-    spin.disabled=false;
-    spin.classList.add("hidden");
-   }
-   if(run)run.disabled=false;
+   if(typeof openSeasonDetail==="function")openSeasonDetail(CHICAGO_TEAM_ID);
   }else if(seasonDetailOverlay?.classList.contains("open")&&typeof openSeasonDetail==="function"){
    openSeasonDetail(CHICAGO_TEAM_ID);
   }else if(typeof render==="function"){
