@@ -1,6 +1,8 @@
 // Single player renderer for every build, season, award, and results surface.
 const PlayerRenderer = (() => {
  const PLAYER_ART_SRC = "./assets/player/base-player.png";
+ const TEAM_PLAYER_ASSET_ROOT = "./assets/teamPlayers";
+ const TEAM_PLAYER_ASSETS = new Set([]);
  const UNIFORM_ASSET_ROOT = "./assets/uniforms";
  const DEFAULT_UNIFORM = "default";
  const POST_BUILD_UNIFORM_STATES = new Set(["complete", "season", "awards", "results"]);
@@ -67,6 +69,25 @@ const PlayerRenderer = (() => {
   return {primary, trim, number};
  }
 
+ function normalizedTeamId(teamId){
+  const id=String(teamId||"").trim().toUpperCase();
+  return /^[A-Z]{2,3}$/.test(id)?id:"";
+ }
+
+ function getTeamPlayerAsset(teamId){
+  const id=normalizedTeamId(teamId);
+  if(!id || !TEAM_PLAYER_ASSETS.has(id))return PLAYER_ART_SRC;
+  return `${TEAM_PLAYER_ASSET_ROOT}/${id}.png`;
+ }
+
+ function shouldUseTeamPlayerAsset(config){
+  return config.uniform === "team" && !!config.teamId && POST_BUILD_UNIFORM_STATES.has(config.state);
+ }
+
+ function playerImageSource(config){
+  return shouldUseTeamPlayerAsset(config)?getTeamPlayerAsset(config.teamId):PLAYER_ART_SRC;
+ }
+
  function uniformActive(config){
   return config.uniform === "team" && !!config.teamId && POST_BUILD_UNIFORM_STATES.has(config.state);
  }
@@ -98,9 +119,9 @@ const PlayerRenderer = (() => {
   // Future uniform system:
   // Use finished transparent full-player PNGs instead of rough jersey/shorts overlays.
   // Example target paths:
-  // assets/team-players/CHI/player.png
-  // assets/team-players/LAL/player.png
-  // assets/team-players/BOS/player.png
+  // assets/teamPlayers/CHI.png
+  // assets/teamPlayers/LAL.png
+  // assets/teamPlayers/BOS.png
   // The renderer should swap the full player image by selected team after build completion.
   if(!UNIFORM_VISUALS_ENABLED)return;
   if(!uniformActive(config))return;
@@ -141,7 +162,7 @@ const PlayerRenderer = (() => {
   const sprite = ensureSprite(container, img);
   const colors=uniformColors(normalized);
 
-  img.src = PLAYER_ART_SRC;
+  img.src = playerImageSource(normalized);
   img.classList.add("player-img", "player-layer", "player-base-layer");
   container?.classList.add("player-render-surface");
   sprite?.classList.add("player-sprite");
@@ -226,7 +247,7 @@ const PlayerRenderer = (() => {
   }
  }
 
- return {render: renderToSurface, playerArtSrc: PLAYER_ART_SRC, getPlayerRenderBox};
+ return {render: renderToSurface, playerArtSrc: PLAYER_ART_SRC, getPlayerRenderBox, getTeamPlayerAsset};
 })();
 
 function renderPlayer(config){
@@ -237,4 +258,9 @@ function getPlayerRenderBox(surface){
  return PlayerRenderer.getPlayerRenderBox(surface);
 }
 
+function getTeamPlayerAsset(teamId){
+ return PlayerRenderer.getTeamPlayerAsset(teamId);
+}
+
 window.getPlayerRenderBox = getPlayerRenderBox;
+window.getTeamPlayerAsset = getTeamPlayerAsset;

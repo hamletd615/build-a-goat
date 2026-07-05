@@ -54,6 +54,67 @@ These may change brightness, opacity, filters, or future non-layout appearance:
 
 Appearance changes must not change player box size, player position, sprite dimensions, `object-fit`, `transform-origin`, or anchor math.
 
+## Future team player assets
+
+Team-specific completed-build player art is prepared for this folder structure:
+
+```text
+assets/
+  teamPlayers/
+    ATL.png
+    BOS.png
+    BKN.png
+    CHA.png
+    CHI.png
+    CLE.png
+    DAL.png
+    DEN.png
+    DET.png
+    GSW.png
+    HOU.png
+    IND.png
+    LAC.png
+    LAL.png
+    MEM.png
+    MIA.png
+    MIL.png
+    MIN.png
+    NOP.png
+    NYK.png
+    OKC.png
+    ORL.png
+    PHI.png
+    PHX.png
+    POR.png
+    SAC.png
+    SAS.png
+    TOR.png
+    UTA.png
+    WAS.png
+```
+
+Naming convention:
+
+- Each file is a transparent full-player PNG.
+- Each filename is the three-letter NBA team abbreviation.
+- The image canvas must match `assets/player/base-player.png`.
+
+Renderer entry point:
+
+- `renderPlayer()` in `js/playerRenderer.js` is still the only player renderer.
+- `getTeamPlayerAsset(teamId)` is the canonical lookup for future team-player PNGs.
+- `playerImageSource(config)` is the only renderer path that decides whether to request a team-player asset.
+
+Fallback behavior:
+
+- If a team-player asset is not registered as shipped, `getTeamPlayerAsset(teamId)` returns `assets/player/base-player.png`.
+- Missing team-player assets must never produce broken image icons or console errors.
+
+Post-build only behavior:
+
+- Only completed/post-build render states may request team-player assets: `complete`, `season`, `awards`, and `results`.
+- Trait selection, spin wheels, team selection, player selection, and unfinished builds must always use `assets/player/base-player.png`.
+
 ## Files that must not be edited for uniforms
 
 Uniform work must not edit:
