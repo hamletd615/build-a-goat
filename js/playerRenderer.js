@@ -2,6 +2,8 @@
 const PlayerRenderer = (() => {
  const PLAYER_ART_SRC = "./assets/player/base-player.png";
  const TEAM_PLAYER_ASSET_ROOT = "./assets/teamPlayers";
+ // Team-player assets must be transparent PNGs with the same canvas as base-player.png.
+ // CSS cannot safely remove a baked white background without damaging the player image.
  const TEAM_PLAYER_ASSETS = new Set(["CHI"]);
  const TEAM_PLAYER_ASSET_STATUS = {};
  const TEAM_PLAYER_ASSET_WAITERS = {};
@@ -11,6 +13,7 @@ const PlayerRenderer = (() => {
  const UNIFORM_VISUALS_ENABLED = false;
  const layoutSnapshots = {};
  const LAYOUT_EPSILON = 0.5;
+ const TEAM_PLAYER_ASSET_WARNINGS = {};
 
  const surfaces = {
   home: {container: "homePlayer", state: "home", alt: "Build-A-GOAT player"},
@@ -105,6 +108,7 @@ const PlayerRenderer = (() => {
   const testImage = new Image();
   testImage.onload = () => {
    TEAM_PLAYER_ASSET_STATUS[id] = "loaded";
+   warnIfTeamPlayerAssetNeedsExport(id,testImage);
    const waiters=TEAM_PLAYER_ASSET_WAITERS[id]||[];
    delete TEAM_PLAYER_ASSET_WAITERS[id];
    waiters.forEach(callback=>callback(src));
@@ -114,6 +118,21 @@ const PlayerRenderer = (() => {
    delete TEAM_PLAYER_ASSET_WAITERS[id];
   };
   testImage.src = src;
+ }
+
+ function warnIfTeamPlayerAssetNeedsExport(teamId,img){
+  if(TEAM_PLAYER_ASSET_WARNINGS[teamId])return;
+  TEAM_PLAYER_ASSET_WARNINGS[teamId]=true;
+  const base=new Image();
+  base.onload=()=>{
+   if(img.naturalWidth!==base.naturalWidth||img.naturalHeight!==base.naturalHeight){
+    warnLayout(`${teamId} team-player asset canvas differs from base-player.png; export a transparent PNG on the base canvas`,{
+     teamAsset:{width:img.naturalWidth,height:img.naturalHeight},
+     baseAsset:{width:base.naturalWidth,height:base.naturalHeight}
+    });
+   }
+  };
+  base.src=PLAYER_ART_SRC;
  }
 
  function shouldUseTeamPlayerAsset(config){

@@ -323,6 +323,10 @@ function prevAward(){
 function closeFinalReport(){
  document.getElementById("finalReportOverlay")?.classList.remove("open");
  document.getElementById("app")?.classList.remove("hidden");
+ if(isComplete()){
+  document.getElementById("stage")?.classList.add("complete");
+  document.querySelector(".side")?.classList.add("complete");
+ }
  render();
  setResultButton();
  window.scrollTo(0,0);

@@ -749,6 +749,7 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
  align-items:center;
  justify-content:center;
  background:transparent;
+ background-color:transparent;
  overflow:visible;
 }
 .player-render-surface .player-sprite{
@@ -761,6 +762,8 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
  place-items:center;
  isolation:isolate;
  pointer-events:none;
+ background:transparent;
+ background-color:transparent;
 }
 .player-render-surface .player-sprite > .player-layer{
  grid-area:1/1;
@@ -776,6 +779,7 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
  transform:none;
  transform-origin:center center;
  background:transparent;
+ background-color:transparent;
  position:absolute;
  inset:0;
  z-index:var(--player-base-layer);
