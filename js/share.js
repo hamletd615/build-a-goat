@@ -50,6 +50,7 @@ function goHome(){
  isSpinning=false;
  simTeam=null;
  selectedSeasonTeam=null;
+ selectedSeasonTeamId=null;
  lastRegularSeason=null;
  lastPlayoffRun=null;
 

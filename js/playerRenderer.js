@@ -69,7 +69,8 @@ const PlayerRenderer = (() => {
   const useTeam=config.uniform === "team" && config.teamId;
   const primary=(useTeam && TEAM_COLORS?.[config.teamId]) || "#2f3339";
   const trim=(useTeam && TEAM_TRIMS?.[config.teamId]) || (useTeam ? "#f8fafc" : "#5c6470");
-  return {primary, trim};
+  const secondary=useTeam ? trim : "#242830";
+  return {primary, secondary, trim};
  }
 
  function targetImage(surface){
@@ -106,6 +107,7 @@ const PlayerRenderer = (() => {
   container?.classList.add("player-render-surface");
   sprite?.classList.add("player-sprite");
   sprite?.style.setProperty("--uniform-primary",colors.primary);
+  sprite?.style.setProperty("--uniform-secondary",colors.secondary);
   sprite?.style.setProperty("--uniform-trim",colors.trim);
   applyRenderMetadata(img, normalized, surface.state);
   applyRenderMetadata(container, normalized, surface.state);

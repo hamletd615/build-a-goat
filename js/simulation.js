@@ -42,12 +42,15 @@ function spinSeasonTeam(){
 function showSeasonTeam(abbr){
  const t=TEAMS[abbr],r=TEAM_REPORT[abbr]||{score:t.base+40,off:t.base+38,def:t.base+38,note:"season profile"};
  const logo=teamLogo(abbr);
+ selectedSeasonTeamId=abbr;
+ render();
  const el=document.getElementById("seasonResult");
  el.innerHTML=`${logo?`<img class="season-logo" src="${logo}" alt="${t.name} logo" referrerpolicy="no-referrer">`:`<div class="season-logo"></div>`}<div class="season-team">${t.name}</div><div class="season-meta">${abbr}</div>`;
  el.classList.add("show");
 }
 function openSeasonDetail(abbr){
  if(!abbr)return;
+ selectedSeasonTeamId=abbr;
  const t=TEAMS[abbr],r=TEAM_REPORT[abbr]||{score:t.base+40,off:t.base+38,def:t.base+38,note:"season profile"};
  const logo=teamLogo(abbr);
  document.getElementById("seasonOverlay").classList.remove("open");
@@ -176,12 +179,16 @@ function stepPlayoffGame(){
  }
  playoffTimer=setTimeout(stepPlayoffGame,900);
 }
-function awardPhotoFor(name){
-  const p=all.find(x=>x.name===name)||all.find(x=>x.player===name);
+function awardPhotoFor(name,abbr){
+  const p=all.find(x=>x.name===name&&x.abbr===abbr);
   return p?.headshot||"";
 }
 function awardCard(type,title,name,abbr,stats,photo,renderPlayerAward){
-  return {type,title,name,abbr,stats,photo:photo||awardPhotoFor(name),renderPlayerAward:!!renderPlayerAward};
+  const custom=typeof photo==="string"&&photo.trim().startsWith("<");
+  const currentPlayer=!renderPlayerAward&&!custom?all.find(x=>x.name===name):null;
+  const cardAbbr=currentPlayer?.abbr||abbr;
+  const cardPhoto=photo||(currentPlayer?.headshot||awardPhotoFor(name,cardAbbr));
+  return {type,title,name,abbr:cardAbbr,stats,photo:cardPhoto,renderPlayerAward:!!renderPlayerAward};
 }
 function awardRand(type,items){
  const recent=recentAwardWinners[type]||[];
@@ -195,7 +202,7 @@ function cupChampionArt(abbr){
  return `<div class="cup-art"><svg viewBox="0 0 120 94" aria-hidden="true"><path d="M31 9h58v10c0 26-8 43-22 50v9h19v8H34v-8h19v-9C39 62 31 45 31 19V9Z" fill="#facc15"/><path d="M39 17h42v3c0 22-5 36-21 43-16-7-21-21-21-43v-3Z" fill="#f59e0b"/><path d="M31 20H14c1 18 10 29 25 32" fill="none" stroke="#fde68a" stroke-width="8" stroke-linecap="round"/><path d="M89 20h17c-1 18-10 29-25 32" fill="none" stroke="#fde68a" stroke-width="8" stroke-linecap="round"/><path d="M47 28h26M44 42h32" stroke="#7c2d12" stroke-width="5" stroke-linecap="round"/><path d="M48 78h24v8H48z" fill="#facc15"/></svg><div class="cup-art-name">${name}</div></div>`;
 }
 function buildAwards(){
- const add=lastRegularSeason?.team||selectedSeasonTeam||"BOS",tot=lastRegularSeason?.total||{pts:0,reb:0,ast:0,stl:0,blk:0},p=lastRegularSeason?.profile||buildStatProfile(),o=overall()||80;
+ const add=selectedBuildTeamId()||"BOS",tot=lastRegularSeason?.total||{pts:0,reb:0,ast:0,stl:0,blk:0},p=lastRegularSeason?.profile||buildStatProfile(),o=overall()||80;
  const ppg=tot.pts/82,rpg=tot.reb/82,apg=tot.ast/82,spg=tot.stl/82,bpg=tot.blk/82,wins=lastRegularSeason?.wins||0;
  const buildName=archetype(),team=TEAMS[add]?.name||add,buildStats={
   Record:`${lastRegularSeason?.wins||0}-${lastRegularSeason?.losses||0}`,
@@ -277,7 +284,7 @@ function renderAward(){
  if(card.renderPlayerAward){
   renderPlayer({
    state: "awards",
-   teamId: card.abbr,
+   teamId: selectedBuildTeamId(),
    uniform: "team"
   });
  }else if(teamOnly){
@@ -344,6 +351,7 @@ function traitRows(){
 function openFinalReport(){
  if(!lastRegularSeason)return;
  const add=lastRegularSeason.team,t=TEAMS[add],r=TEAM_REPORT[add]||{off:80,def:80},logo=teamLogo(add),tot=lastRegularSeason.total,profile=lastRegularSeason.profile;
+ selectedSeasonTeamId=add;
  document.getElementById("regularSeasonOverlay")?.classList.remove("open");
  document.getElementById("playoffOverlay")?.classList.remove("open");
  document.getElementById("awardsOverlay")?.classList.remove("open");

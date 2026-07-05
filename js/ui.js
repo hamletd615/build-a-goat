@@ -178,7 +178,7 @@ function buildList(){
 
   traitLayer.innerHTML=traitCards();
 
-  const renderTeamId=selectedSeasonTeam || lastRegularSeason?.team || simTeam || "";
+  const renderTeamId=selectedBuildTeamId();
   renderPlayer({
    state: complete ? "complete" : "build",
    teamId: renderTeamId,

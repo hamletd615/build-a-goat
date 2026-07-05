@@ -69,7 +69,6 @@ function resetBodyAnchorMap(){
  bodyAnchorState={...DEFAULT_BODY_ANCHORS};
  saveBodyAnchorMap();
  drawCallouts();
- renderAnchorEditor();
 }
 
 function visibleAnchorKeys(){
@@ -78,38 +77,12 @@ function visibleAnchorKeys(){
 }
 
 function ensureAnchorEditor(){
- if(document.getElementById("anchorEditor"))return;
- const editor=document.createElement("div");
- editor.id="anchorEditor";
- editor.className="anchor-editor";
- editor.innerHTML=`
-  <div class="anchor-editor-head">
-   <b>Anchors</b>
-   <button type="button" id="anchorEditorToggle">Edit</button>
-  </div>
-  <div class="anchor-editor-body">
-   <div class="anchor-editor-help">Drag points on the player. Values save automatically.</div>
-   <div id="anchorEditorList"></div>
-   <button type="button" id="anchorEditorReset">Reset Anchors</button>
-  </div>
- `;
- document.body.appendChild(editor);
- document.getElementById("anchorEditorToggle").addEventListener("click",()=>{
-  editor.classList.toggle("editing");
-  renderAnchorEditor();
- });
- document.getElementById("anchorEditorReset").addEventListener("click",resetBodyAnchorMap);
+ document.getElementById("anchorEditor")?.remove();
+ document.getElementById("anchorHandles")?.remove();
 }
 
 function renderAnchorEditor(){
  ensureAnchorEditor();
- const list=document.getElementById("anchorEditorList");
- if(!list)return;
- list.innerHTML=visibleAnchorKeys().map(key=>{
-  const p=bodyAnchorState[key]||DEFAULT_BODY_ANCHORS[key];
-  return `<div class="anchor-editor-row" data-trait="${key}"><span>${key}</span><code>${p[0].toFixed(3)}, ${p[1].toFixed(3)}</code></div>`;
- }).join("");
- renderAnchorHandles();
 }
 
 function updateAnchorEditorRow(key){
