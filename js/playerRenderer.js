@@ -1,7 +1,9 @@
 // Single player renderer for every build, season, award, and results surface.
 const PlayerRenderer = (() => {
  const PLAYER_ART_SRC = "./assets/player/base-player.png";
+ const UNIFORM_ASSET_ROOT = "./assets/uniforms";
  const DEFAULT_UNIFORM = "default";
+ const POST_BUILD_UNIFORM_STATES = new Set(["complete", "season", "awards", "results"]);
  const layoutSnapshots = {};
  const LAYOUT_EPSILON = 0.5;
 
@@ -9,6 +11,7 @@ const PlayerRenderer = (() => {
   home: {container: "homePlayer", state: "home", alt: "Build-A-GOAT player"},
   build: {img: "playerImg", state: "build", alt: "Build player"},
   complete: {img: "playerImg", state: "complete", alt: "Completed build player"},
+  seasonStart: {container: "seasonPlayer", state: "season", alt: "Season start build player"},
   season: {img: "seasonDetailImg", container: "seasonDetailPlayer", state: "season", alt: "Season build player"},
   awards: {container: "awardPhoto", state: "awards", alt: "Award player"},
   results: {img: "finalReportImg", container: "finalReportPlayer", state: "results", alt: "Final report player"}
@@ -26,6 +29,7 @@ const PlayerRenderer = (() => {
  }
 
  function surfaceFor(config){
+  if(config.surface && surfaces[config.surface])return surfaces[config.surface];
   if(config.surface === "award" || config.surface === "awards")return surfaces.awards;
   return surfaces[config.state] || surfaces.build;
  }
@@ -62,19 +66,27 @@ const PlayerRenderer = (() => {
   return {primary, trim, number};
  }
 
+ function uniformActive(config){
+  return config.uniform === "team" && !!config.teamId && POST_BUILD_UNIFORM_STATES.has(config.state);
+ }
+
  function contrastColor(primary,trim){
   const color=/^#[0-9a-f]{6}$/i.test(trim||"")?trim:"#ffffff";
   if(color.toLowerCase()==="#111827")return "#ffffff";
   return color;
  }
 
- function uniformActive(config){
-  return config.uniform === "team" && !!config.teamId;
+ function uniformAssetPath(teamId,piece){
+  return `${UNIFORM_ASSET_ROOT}/${teamId}/${piece}.png`;
  }
 
- function makeUniformLayer(className){
-  const layer=document.createElement("div");
-  layer.className=`uniform-layer ${className}`;
+ function makeUniformLayer(piece,teamId){
+  const layer=document.createElement("img");
+  layer.className=`uniform-layer player-layer player-uniform-layer player-${piece}-layer`;
+  layer.src=uniformAssetPath(teamId,piece);
+  layer.alt="";
+  layer.decoding="async";
+  layer.draggable=false;
   layer.setAttribute("aria-hidden","true");
   return layer;
  }
@@ -84,16 +96,8 @@ const PlayerRenderer = (() => {
   sprite.querySelectorAll(".uniform-layer").forEach(layer=>layer.remove());
   if(!uniformActive(config))return;
 
-  const logoUrl=typeof teamLogo==="function"?teamLogo(config.teamId):"";
-  if(logoUrl){
-   const logo=makeUniformLayer("player-uniform-logo");
-   logo.style.backgroundImage=`url("${logoUrl}")`;
-   sprite.appendChild(logo);
-  }
-
-  const number=makeUniformLayer("player-uniform-number");
-  number.textContent="1";
-  sprite.appendChild(number);
+  sprite.appendChild(makeUniformLayer("shorts",config.teamId));
+  sprite.appendChild(makeUniformLayer("jersey",config.teamId));
  }
 
  function targetImage(surface){

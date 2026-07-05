@@ -181,8 +181,8 @@ function buildList(){
   const renderTeamId=selectedBuildTeamId();
   renderPlayer({
    state: complete ? "complete" : "build",
-   teamId: renderTeamId,
-   uniform: renderTeamId ? "team" : "default"
+   teamId: complete ? renderTeamId : "",
+   uniform: complete && renderTeamId ? "team" : "default"
   });
   drawCallouts();
   renderAnchorEditor?.();
