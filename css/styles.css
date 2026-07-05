@@ -765,57 +765,6 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
  z-index:var(--player-base-layer);
 }
 .player-render-surface .player-sprite > .uniform-layer{
- display:block;
- opacity:.46;
- mix-blend-mode:normal;
- pointer-events:none;
- filter:saturate(1.45) contrast(1.1) drop-shadow(0 4px 3px rgba(0,0,0,.28));
- transform:translateZ(0);
- z-index:var(--player-jersey-layer);
- will-change:clip-path;
-}
-.player-render-surface .player-sprite[data-uniform="team"] > .uniform-layer{
- opacity:.88;
- filter:saturate(1.65) contrast(1.16) drop-shadow(0 4px 3px rgba(0,0,0,.32));
-}
-.player-render-surface .player-sprite[data-uniform="default"] > .uniform-layer{
- opacity:.36;
-}
-.player-render-surface .player-sprite > .uniform-jersey-layer{
- z-index:var(--player-jersey-layer);
- background:var(--uniform-primary);
- clip-path:polygon(36% 20%,64% 20%,72% 36%,67% 58%,33% 58%,28% 36%);
-}
-.player-render-surface .player-sprite > .uniform-shorts-layer{
- z-index:var(--player-shorts-layer);
- background:var(--uniform-secondary);
- clip-path:polygon(32% 55%,68% 55%,75% 75%,59% 78%,51% 61%,41% 78%,25% 75%);
-}
-.player-render-surface .player-sprite > .uniform-trim-layer{
- z-index:var(--player-trim-layer);
- opacity:.92;
- mix-blend-mode:normal;
- background:
-  linear-gradient(90deg,transparent 0 32%,var(--uniform-trim) 32% 36%,transparent 36% 64%,var(--uniform-trim) 64% 68%,transparent 68% 100%),
-  linear-gradient(180deg,transparent 0 21%,var(--uniform-trim) 21% 24%,transparent 24% 56%,var(--uniform-trim) 56% 60%,transparent 60% 100%),
-  linear-gradient(115deg,transparent 0 45%,var(--uniform-trim) 45% 49%,transparent 49% 100%),
-  linear-gradient(65deg,transparent 0 51%,var(--uniform-trim) 51% 55%,transparent 55% 100%);
- clip-path:polygon(28% 18%,72% 18%,78% 78%,22% 78%);
-}
-.player-render-surface .player-sprite > .uniform-logo-layer{
- z-index:var(--player-logo-layer);
- left:46%;
- top:32%;
- width:9%;
- height:5%;
- display:grid;
- place-items:center;
- color:var(--uniform-trim);
- font-size:clamp(8px,1.2vw,14px);
- font-weight:1000;
- line-height:1;
- letter-spacing:0;
- text-shadow:0 1px 1px rgba(0,0,0,.45);
  display:none;
 }
 .player-wrap.player-render-surface .player-sprite{

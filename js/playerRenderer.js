@@ -52,19 +52,6 @@ const PlayerRenderer = (() => {
   return sprite;
  }
 
- function ensureUniformLayer(sprite, className, label){
-  let layer=sprite.querySelector(`.${className}`);
-  if(!layer){
-   layer=document.createElement("div");
-   layer.className=`player-layer uniform-layer ${className}`;
-   layer.setAttribute("aria-hidden","true");
-   if(label)layer.textContent=label;
-   sprite.appendChild(layer);
-  }
-  if(label!=null)layer.textContent=label;
-  return layer;
- }
-
  function uniformColors(config){
   const useTeam=config.uniform === "team" && config.teamId;
   const primary=(useTeam && TEAM_COLORS?.[config.teamId]) || "#2f3339";
@@ -100,10 +87,7 @@ const PlayerRenderer = (() => {
 
   img.src = PLAYER_ART_SRC;
   img.classList.add("player-img", "player-layer", "player-base-layer");
-  ensureUniformLayer(sprite, "uniform-jersey-layer");
-  ensureUniformLayer(sprite, "uniform-shorts-layer");
-  ensureUniformLayer(sprite, "uniform-trim-layer");
-  ensureUniformLayer(sprite, "uniform-logo-layer", "");
+  sprite?.querySelectorAll(".uniform-layer").forEach(layer=>layer.remove());
   container?.classList.add("player-render-surface");
   sprite?.classList.add("player-sprite");
   sprite?.style.setProperty("--uniform-primary",colors.primary);
