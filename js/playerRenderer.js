@@ -4,6 +4,7 @@ const PlayerRenderer = (() => {
  const UNIFORM_ASSET_ROOT = "./assets/uniforms";
  const DEFAULT_UNIFORM = "default";
  const POST_BUILD_UNIFORM_STATES = new Set(["complete", "season", "awards", "results"]);
+ const UNIFORM_VISUALS_ENABLED = false;
  const layoutSnapshots = {};
  const LAYOUT_EPSILON = 0.5;
 
@@ -94,6 +95,14 @@ const PlayerRenderer = (() => {
  function renderUniform(sprite,config){
   if(!sprite)return;
   sprite.querySelectorAll(".uniform-layer").forEach(layer=>layer.remove());
+  // Future uniform system:
+  // Use finished transparent full-player PNGs instead of rough jersey/shorts overlays.
+  // Example target paths:
+  // assets/team-players/CHI/player.png
+  // assets/team-players/LAL/player.png
+  // assets/team-players/BOS/player.png
+  // The renderer should swap the full player image by selected team after build completion.
+  if(!UNIFORM_VISUALS_ENABLED)return;
   if(!uniformActive(config))return;
 
   sprite.appendChild(makeUniformLayer("shorts",config.teamId));

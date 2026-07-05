@@ -47,12 +47,7 @@ function showSeasonTeam(abbr){
  const el=document.getElementById("seasonResult");
  el.innerHTML=`${logo?`<img class="season-logo" src="${logo}" alt="${t.name} logo" referrerpolicy="no-referrer">`:`<div class="season-logo"></div>`}<div class="season-team">${t.name}</div><div class="season-meta">${abbr}</div>`;
  el.classList.add("show");
- renderPlayer({
-  surface: "seasonStart",
-  state: "season",
-  teamId: abbr,
-  uniform: "team"
- });
+ document.getElementById("seasonPlayer").innerHTML="";
 }
 function openSeasonDetail(abbr){
  if(!abbr)return;
