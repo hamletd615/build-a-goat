@@ -744,6 +744,8 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
  --uniform-primary:#2f3339;
  --uniform-trim:#5c6470;
  --uniform-number:#ffffff;
+ --uniform-logo-size:8.5%;
+ --uniform-number-size:28px;
  display:flex;
  align-items:center;
  justify-content:center;
@@ -778,6 +780,48 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
  position:absolute;
  inset:0;
  z-index:var(--player-base-layer);
+}
+.player-render-surface .uniform-layer{
+ position:absolute;
+ pointer-events:none;
+ box-sizing:border-box;
+ contain:layout paint style;
+ z-index:var(--player-logo-layer);
+}
+.player-render-surface .player-uniform-logo{
+ left:50%;
+ top:36.5%;
+ width:var(--uniform-logo-size);
+ aspect-ratio:1;
+ transform:translate(-50%,-50%);
+ border-radius:50%;
+ border:1px solid color-mix(in srgb,var(--uniform-trim) 82%,#ffffff 18%);
+ background-color:rgba(255,255,255,.9);
+ background-repeat:no-repeat;
+ background-position:center;
+ background-size:82% 82%;
+ box-shadow:0 0 0 1px color-mix(in srgb,var(--uniform-primary) 78%,transparent),0 3px 7px rgba(0,0,0,.32);
+}
+.player-render-surface .player-uniform-number{
+ left:50%;
+ top:44%;
+ width:9%;
+ height:7%;
+ transform:translate(-50%,-50%);
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ color:var(--uniform-number);
+ font-weight:1000;
+ font-size:var(--uniform-number-size);
+ line-height:1;
+ text-align:center;
+ text-shadow:
+  -1px -1px 0 var(--uniform-primary),
+  1px -1px 0 var(--uniform-primary),
+  -1px 1px 0 var(--uniform-primary),
+  1px 1px 0 var(--uniform-primary),
+  0 3px 6px rgba(0,0,0,.42);
 }
 .player-wrap.player-render-surface .player-sprite{
  width:min(var(--player-max-width), calc(100% * var(--player-scale)));
@@ -825,30 +869,35 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
  --player-max-width:640px;
  --player-brightness:.5;
  --player-opacity:.9;
+ --uniform-number-size:30px;
 }
 .player-wrap.player-render-surface[data-render-state="complete"]{
  --player-scale:.68;
  --player-max-width:560px;
  --player-brightness:1.18;
  --player-opacity:1;
+ --uniform-number-size:28px;
  align-items:center;
 }
 .season-detail-player.player-render-surface[data-render-state="season"]{
  --player-scale:.8;
  --player-brightness:1.16;
  --player-opacity:1;
+ --uniform-number-size:24px;
  margin:12px 0 22px;
 }
 .award-photo.award-player-render.player-render-surface[data-render-state="awards"]{
  --player-scale:.72;
  --player-brightness:1.16;
  --player-opacity:1;
+ --uniform-number-size:13px;
  margin:8px auto 26px;
 }
 .final-report-player.player-render-surface[data-render-state="results"]{
  --player-scale:.76;
  --player-brightness:1.16;
  --player-opacity:1;
+ --uniform-number-size:24px;
  margin:16px auto 28px;
 }
 .player-render-surface .player-sprite > .player-base-layer[data-render-state="build"]{

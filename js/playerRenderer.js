@@ -58,12 +58,42 @@ const PlayerRenderer = (() => {
   const useTeam=config.uniform === "team" && config.teamId;
   const primary=(useTeam && TEAM_COLORS?.[config.teamId]) || "#2f3339";
   const trim=(useTeam && TEAM_TRIMS?.[config.teamId]) || (useTeam ? "#f8fafc" : "#5c6470");
-  return {primary, trim};
+  const number=contrastColor(primary,trim);
+  return {primary, trim, number};
  }
 
- function renderUniform(sprite){
+ function contrastColor(primary,trim){
+  const color=/^#[0-9a-f]{6}$/i.test(trim||"")?trim:"#ffffff";
+  if(color.toLowerCase()==="#111827")return "#ffffff";
+  return color;
+ }
+
+ function uniformActive(config){
+  return config.uniform === "team" && !!config.teamId;
+ }
+
+ function makeUniformLayer(className){
+  const layer=document.createElement("div");
+  layer.className=`uniform-layer ${className}`;
+  layer.setAttribute("aria-hidden","true");
+  return layer;
+ }
+
+ function renderUniform(sprite,config){
   if(!sprite)return;
   sprite.querySelectorAll(".uniform-layer").forEach(layer=>layer.remove());
+  if(!uniformActive(config))return;
+
+  const logoUrl=typeof teamLogo==="function"?teamLogo(config.teamId):"";
+  if(logoUrl){
+   const logo=makeUniformLayer("player-uniform-logo");
+   logo.style.backgroundImage=`url("${logoUrl}")`;
+   sprite.appendChild(logo);
+  }
+
+  const number=makeUniformLayer("player-uniform-number");
+  number.textContent="1";
+  sprite.appendChild(number);
  }
 
  function targetImage(surface){
@@ -100,11 +130,12 @@ const PlayerRenderer = (() => {
 
   img.src = PLAYER_ART_SRC;
   img.classList.add("player-img", "player-layer", "player-base-layer");
-  renderUniform(sprite);
   container?.classList.add("player-render-surface");
   sprite?.classList.add("player-sprite");
   sprite?.style.setProperty("--uniform-primary",colors.primary);
   sprite?.style.setProperty("--uniform-trim",colors.trim);
+  sprite?.style.setProperty("--uniform-number",colors.number);
+  renderUniform(sprite, normalized);
   applyRenderMetadata(img, normalized, surface.state);
   applyRenderMetadata(container, normalized, surface.state);
   applyRenderMetadata(sprite, normalized, surface.state);
