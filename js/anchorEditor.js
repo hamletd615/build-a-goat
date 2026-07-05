@@ -44,6 +44,7 @@ const TAB_TRAITS = {
 
 let bodyAnchorState = loadBodyAnchorMap();
 window.isAnchorDragging = false;
+let anchorEditorEnabled = false;
 
 function loadBodyAnchorMap(){
  try{
@@ -61,6 +62,13 @@ function saveBodyAnchorMap(){
  localStorage.setItem(ANCHOR_STORAGE_KEY,JSON.stringify(bodyAnchorState));
 }
 
+//////////////////////////////////////////////
+// PLAYER LAYOUT CONTRACT
+// DO NOT MODIFY WITHOUT UPDATING
+// THE ANCHOR SYSTEM.
+// Appearance changes ONLY.
+// Layout changes require anchor recalibration.
+//////////////////////////////////////////////
 function bodyAnchorMap(){
  return bodyAnchorState;
 }
@@ -69,6 +77,7 @@ function resetBodyAnchorMap(){
  bodyAnchorState={...DEFAULT_BODY_ANCHORS};
  saveBodyAnchorMap();
  drawCallouts();
+ renderAnchorEditor();
 }
 
 function visibleAnchorKeys(){
@@ -77,12 +86,46 @@ function visibleAnchorKeys(){
 }
 
 function ensureAnchorEditor(){
- document.getElementById("anchorEditor")?.remove();
- document.getElementById("anchorHandles")?.remove();
+ let editor=document.getElementById("anchorEditor");
+ if(editor)return editor;
+ editor=document.createElement("div");
+ editor.id="anchorEditor";
+ editor.className="anchor-editor";
+ editor.innerHTML=`
+  <div class="anchor-editor-head">
+   <b>Anchors</b>
+   <button type="button" id="anchorEditorToggle">Edit</button>
+  </div>
+  <div class="anchor-editor-body">
+   <div class="anchor-editor-help">Drag points on the player. Values save automatically.</div>
+   <div id="anchorEditorList"></div>
+   <button type="button" id="anchorEditorReset">Reset Anchors</button>
+  </div>
+ `;
+ document.body.appendChild(editor);
+ document.getElementById("anchorEditorToggle").addEventListener("click",()=>{
+  editor.classList.toggle("editing");
+  renderAnchorEditor();
+ });
+ document.getElementById("anchorEditorReset").addEventListener("click",resetBodyAnchorMap);
+ return editor;
 }
 
 function renderAnchorEditor(){
- ensureAnchorEditor();
+ const editor=ensureAnchorEditor();
+ editor.classList.toggle("open",anchorEditorEnabled);
+ if(!anchorEditorEnabled){
+  document.getElementById("anchorHandles")?.remove();
+  return;
+ }
+ const list=document.getElementById("anchorEditorList");
+ if(list){
+  list.innerHTML=visibleAnchorKeys().map(key=>{
+   const p=bodyAnchorState[key]||DEFAULT_BODY_ANCHORS[key];
+   return `<div class="anchor-editor-row" data-trait="${key}"><span>${key}</span><code>${p[0].toFixed(3)}, ${p[1].toFixed(3)}</code></div>`;
+  }).join("");
+ }
+ renderAnchorHandles();
 }
 
 function updateAnchorEditorRow(key){
@@ -91,9 +134,16 @@ function updateAnchorEditorRow(key){
  if(row&&p)row.textContent=`${p[0].toFixed(3)}, ${p[1].toFixed(3)}`;
 }
 
+//////////////////////////////////////////////
+// PLAYER LAYOUT CONTRACT
+// DO NOT MODIFY WITHOUT UPDATING
+// THE ANCHOR SYSTEM.
+// Appearance changes ONLY.
+// Layout changes require anchor recalibration.
+//////////////////////////////////////////////
 function renderAnchorHandles(){
  const stage=document.getElementById("stage");
- if(!stage)return;
+ if(!stage||!anchorEditorEnabled)return;
  let layer=document.getElementById("anchorHandles");
  if(!layer){
   layer=document.createElement("div");
@@ -103,9 +153,13 @@ function renderAnchorHandles(){
  }
  const editing=document.getElementById("anchorEditor")?.classList.contains("editing");
  layer.classList.toggle("editing",!!editing);
+ const stageRect=stage.getBoundingClientRect();
+ const playerBox=getPlayerRenderBox?.(stage.classList.contains("complete")?"complete":"build");
  layer.innerHTML=visibleAnchorKeys().map(key=>{
   const p=bodyAnchorState[key]||DEFAULT_BODY_ANCHORS[key];
-  return `<button type="button" class="anchor-handle" data-trait="${key}" style="left:${(p[0]*100).toFixed(3)}%;top:${(p[1]*100).toFixed(3)}%" title="${key}"></button>`;
+  const x=playerBox?((playerBox.left-stageRect.left)+(p[0]*playerBox.width)):(p[0]*stageRect.width);
+  const y=playerBox?((playerBox.top-stageRect.top)+(p[1]*playerBox.height)):(p[1]*stageRect.height);
+  return `<button type="button" class="anchor-handle" data-trait="${key}" style="left:${x.toFixed(1)}px;top:${y.toFixed(1)}px" title="${key}"></button>`;
  }).join("");
  if(!editing)return;
  layer.querySelectorAll(".anchor-handle").forEach(handle=>{
@@ -113,6 +167,13 @@ function renderAnchorHandles(){
  });
 }
 
+//////////////////////////////////////////////
+// PLAYER LAYOUT CONTRACT
+// DO NOT MODIFY WITHOUT UPDATING
+// THE ANCHOR SYSTEM.
+// Appearance changes ONLY.
+// Layout changes require anchor recalibration.
+//////////////////////////////////////////////
 function startAnchorDrag(event){
  event.preventDefault();
  const handle=event.currentTarget;
@@ -122,12 +183,16 @@ function startAnchorDrag(event){
  handle.setPointerCapture(event.pointerId);
  window.isAnchorDragging = true;
  const updateFromPointer=(e)=>{
-  const rect=stage.getBoundingClientRect();
+  const stageRect=stage.getBoundingClientRect();
+  const playerBox=getPlayerRenderBox?.(stage.classList.contains("complete")?"complete":"build");
+  const rect=playerBox||stageRect;
   const x=Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width));
   const y=Math.max(0,Math.min(1,(e.clientY-rect.top)/rect.height));
+  const handleX=(rect.left-stageRect.left)+(x*rect.width);
+  const handleY=(rect.top-stageRect.top)+(y*rect.height);
   bodyAnchorState[key]=[x,y];
-  handle.style.left=`${(x*100).toFixed(3)}%`;
-  handle.style.top=`${(y*100).toFixed(3)}%`;
+  handle.style.left=`${handleX.toFixed(1)}px`;
+  handle.style.top=`${handleY.toFixed(1)}px`;
   saveBodyAnchorMap();
   drawCallouts();
   updateAnchorEditorRow(key);
@@ -140,14 +205,27 @@ function startAnchorDrag(event){
   handle.removeEventListener("pointermove",move);
   handle.removeEventListener("pointerup",stop);
   handle.removeEventListener("pointercancel",stop);
-  renderAnchorEditor();
- };
+ renderAnchorEditor();
+};
  updateFromPointer(event);
  handle.addEventListener("pointermove",move);
  handle.addEventListener("pointerup",stop);
  handle.addEventListener("pointercancel",stop);
 }
 
+function toggleAnchorEditor(){
+ anchorEditorEnabled=!anchorEditorEnabled;
+ const editor=ensureAnchorEditor();
+ editor.classList.toggle("editing",anchorEditorEnabled);
+ renderAnchorEditor();
+}
+
+window.addEventListener("keydown",event=>{
+ if(event.ctrlKey&&event.shiftKey&&event.key.toLowerCase()==="a"){
+  event.preventDefault();
+  toggleAnchorEditor();
+ }
+});
 window.addEventListener("DOMContentLoaded",ensureAnchorEditor);
 window.bodyAnchorMap = bodyAnchorMap;
 window.renderAnchorEditor = renderAnchorEditor;

@@ -2,6 +2,8 @@
 const PlayerRenderer = (() => {
  const PLAYER_ART_SRC = "./assets/player/base-player.png";
  const DEFAULT_UNIFORM = "default";
+ const layoutSnapshots = {};
+ const LAYOUT_EPSILON = 0.5;
 
  const surfaces = {
   home: {container: "homePlayer", state: "home", alt: "Build-A-GOAT player"},
@@ -56,8 +58,12 @@ const PlayerRenderer = (() => {
   const useTeam=config.uniform === "team" && config.teamId;
   const primary=(useTeam && TEAM_COLORS?.[config.teamId]) || "#2f3339";
   const trim=(useTeam && TEAM_TRIMS?.[config.teamId]) || (useTeam ? "#f8fafc" : "#5c6470");
-  const secondary=useTeam ? trim : "#242830";
-  return {primary, secondary, trim};
+  return {primary, trim};
+ }
+
+ function renderUniform(sprite){
+  if(!sprite)return;
+  sprite.querySelectorAll(".uniform-layer").forEach(layer=>layer.remove());
  }
 
  function targetImage(surface){
@@ -75,6 +81,13 @@ const PlayerRenderer = (() => {
   el.dataset.uniform = config.uniform;
  }
 
+//////////////////////////////////////////////
+// PLAYER LAYOUT CONTRACT
+// DO NOT MODIFY WITHOUT UPDATING
+// THE ANCHOR SYSTEM.
+// Appearance changes ONLY.
+// Layout changes require anchor recalibration.
+//////////////////////////////////////////////
  function renderToSurface(config = {}){
   const normalized = normalizeConfig(config);
   const surface = surfaceFor(normalized);
@@ -87,11 +100,10 @@ const PlayerRenderer = (() => {
 
   img.src = PLAYER_ART_SRC;
   img.classList.add("player-img", "player-layer", "player-base-layer");
-  sprite?.querySelectorAll(".uniform-layer").forEach(layer=>layer.remove());
+  renderUniform(sprite);
   container?.classList.add("player-render-surface");
   sprite?.classList.add("player-sprite");
   sprite?.style.setProperty("--uniform-primary",colors.primary);
-  sprite?.style.setProperty("--uniform-secondary",colors.secondary);
   sprite?.style.setProperty("--uniform-trim",colors.trim);
   applyRenderMetadata(img, normalized, surface.state);
   applyRenderMetadata(container, normalized, surface.state);
@@ -101,11 +113,84 @@ const PlayerRenderer = (() => {
    container.classList.remove("cup-photo");
    container.classList.add("award-player-render");
   }
+  assertPlayerLayoutStable(surface.state);
  }
 
- return {render: renderToSurface, playerArtSrc: PLAYER_ART_SRC};
+//////////////////////////////////////////////
+// PLAYER LAYOUT CONTRACT
+// DO NOT MODIFY WITHOUT UPDATING
+// THE ANCHOR SYSTEM.
+// Appearance changes ONLY.
+// Layout changes require anchor recalibration.
+//////////////////////////////////////////////
+ function getPlayerRenderBox(surfaceName = "build"){
+  const surface = surfaces[surfaceName] || surfaces.build;
+  const {container, img} = targetImage(surface);
+  const sprite = container?.querySelector(".player-sprite") || img?.closest(".player-sprite") || img;
+  const el = sprite || img || container;
+  if(!el)return null;
+  const rect = el.getBoundingClientRect();
+  return {
+   left: rect.left,
+   top: rect.top,
+   width: rect.width,
+   height: rect.height,
+   right: rect.right,
+   bottom: rect.bottom
+  };
+ }
+
+ function sameSize(a,b){
+  return Math.abs(a.width-b.width)<=LAYOUT_EPSILON&&Math.abs(a.height-b.height)<=LAYOUT_EPSILON;
+ }
+
+ function sameBox(a,b){
+  return sameSize(a,b)&&Math.abs(a.left-b.left)<=LAYOUT_EPSILON&&Math.abs(a.top-b.top)<=LAYOUT_EPSILON;
+ }
+
+ function snapshotBox(box){
+  return box?{left:box.left,top:box.top,width:box.width,height:box.height}:null;
+ }
+
+ function warnLayout(message,detail){
+  if(typeof console!=="undefined"&&console.warn)console.warn(`[Player Layout Contract] ${message}`,detail);
+ }
+
+ function assertPlayerLayoutStable(surfaceName){
+  requestAnimationFrame(()=>{
+   const box=getPlayerRenderBox(surfaceName);
+   if(!box)return;
+   const snapshot=snapshotBox(box);
+   const previous=layoutSnapshots[surfaceName];
+   if(!previous){
+    layoutSnapshots[surfaceName]=snapshot;
+    compareAnchorSurfaces();
+    return;
+   }
+   if(!sameBox(previous,snapshot)){
+    warnLayout(`${surfaceName} player render box changed after initial render`,{initial:previous,current:snapshot});
+   }
+   compareAnchorSurfaces();
+  });
+ }
+
+ function compareAnchorSurfaces(){
+  const build=layoutSnapshots.build;
+  const complete=layoutSnapshots.complete;
+  if(build&&complete&&!sameSize(build,complete)){
+   warnLayout("build and complete anchor boxes differ; anchor recalibration may be required",{build,complete});
+  }
+ }
+
+ return {render: renderToSurface, playerArtSrc: PLAYER_ART_SRC, getPlayerRenderBox};
 })();
 
 function renderPlayer(config){
  return PlayerRenderer.render(config);
 }
+
+function getPlayerRenderBox(surface){
+ return PlayerRenderer.getPlayerRenderBox(surface);
+}
+
+window.getPlayerRenderBox = getPlayerRenderBox;

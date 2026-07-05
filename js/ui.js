@@ -187,9 +187,18 @@ function buildList(){
   drawCallouts();
   renderAnchorEditor?.();
 }
+//////////////////////////////////////////////
+// PLAYER LAYOUT CONTRACT
+// DO NOT MODIFY WITHOUT UPDATING
+// THE ANCHOR SYSTEM.
+// Appearance changes ONLY.
+// Layout changes require anchor recalibration.
+//////////////////////////////////////////////
 function drawAnchoredCallouts(layer){
  const stage=document.getElementById("stage");
  const sr=stage.getBoundingClientRect();
+ const lr=layer.getBoundingClientRect();
+ const playerBox=getPlayerRenderBox?.(stage?.classList.contains("complete")?"complete":"build");
  const w=layer.clientWidth||sr.width;
  const h=layer.clientHeight||sr.height;
  const anchors=bodyAnchorMap();
@@ -203,12 +212,16 @@ function drawAnchoredCallouts(layer){
   const fromLeft=TRAIT_CARD_SIDES[key]==="left";
   const sx=(fromLeft?cr.right:cr.left)-sr.left;
   const sy=(cr.top-sr.top)+(cr.height*(TRAIT_CARD_ROW_OFFSET[key]||.5));
-  const ex=a[0]*w;
-  const ey=a[1]*h;
+  const ex=playerBox?((playerBox.left-lr.left)+(a[0]*playerBox.width)):(a[0]*w);
+  const ey=playerBox?((playerBox.top-lr.top)+(a[1]*playerBox.height)):(a[1]*h);
   const elbow=fromLeft?Math.min(sx+180,ex-28):Math.max(sx-180,ex+28);
   return `<path d="M${sx.toFixed(1)} ${sy.toFixed(1)} L${elbow.toFixed(1)} ${sy.toFixed(1)} L${ex.toFixed(1)} ${ey.toFixed(1)}"></path>`;
  };
- const circleFor=([x,y])=>`<circle cx="${(x*w).toFixed(1)}" cy="${(y*h).toFixed(1)}" r="5.5"></circle>`;
+ const circleFor=([x,y])=>{
+  const cx=playerBox?((playerBox.left-lr.left)+(x*playerBox.width)):(x*w);
+  const cy=playerBox?((playerBox.top-lr.top)+(y*playerBox.height)):(y*h);
+  return `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="5.5"></circle>`;
+ };
  const seen=[];
  keys.forEach(k=>{
   const p=anchors[k];
