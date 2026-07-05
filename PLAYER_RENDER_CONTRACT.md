@@ -107,7 +107,8 @@ Renderer entry point:
 
 Fallback behavior:
 
-- If a team-player asset is not registered as shipped, `getTeamPlayerAsset(teamId)` returns `assets/player/base-player.png`.
+- The active test registry currently supports only `CHI`.
+- If a team-player asset is not registered as shipped or has not loaded successfully, `getTeamPlayerAsset(teamId)` returns `assets/player/base-player.png`.
 - Missing team-player assets must never produce broken image icons or console errors.
 
 Post-build only behavior:

@@ -2,7 +2,8 @@
 const PlayerRenderer = (() => {
  const PLAYER_ART_SRC = "./assets/player/base-player.png";
  const TEAM_PLAYER_ASSET_ROOT = "./assets/teamPlayers";
- const TEAM_PLAYER_ASSETS = new Set([]);
+ const TEAM_PLAYER_ASSETS = new Set(["CHI"]);
+ const TEAM_PLAYER_ASSET_STATUS = {};
  const UNIFORM_ASSET_ROOT = "./assets/uniforms";
  const DEFAULT_UNIFORM = "default";
  const POST_BUILD_UNIFORM_STATES = new Set(["complete", "season", "awards", "results"]);
@@ -76,8 +77,34 @@ const PlayerRenderer = (() => {
 
  function getTeamPlayerAsset(teamId){
   const id=normalizedTeamId(teamId);
-  if(!id || !TEAM_PLAYER_ASSETS.has(id))return PLAYER_ART_SRC;
+  if(!id || !TEAM_PLAYER_ASSETS.has(id) || TEAM_PLAYER_ASSET_STATUS[id] !== "loaded")return PLAYER_ART_SRC;
   return `${TEAM_PLAYER_ASSET_ROOT}/${id}.png`;
+ }
+
+ function teamPlayerAssetPath(teamId){
+  const id=normalizedTeamId(teamId);
+  return id && TEAM_PLAYER_ASSETS.has(id) ? `${TEAM_PLAYER_ASSET_ROOT}/${id}.png` : "";
+ }
+
+ function loadTeamPlayerAsset(teamId,onReady){
+  const id=normalizedTeamId(teamId);
+  const src=teamPlayerAssetPath(id);
+  if(!src)return;
+  if(TEAM_PLAYER_ASSET_STATUS[id] === "loaded"){
+   onReady(src);
+   return;
+  }
+  if(TEAM_PLAYER_ASSET_STATUS[id] === "loading" || TEAM_PLAYER_ASSET_STATUS[id] === "missing")return;
+  TEAM_PLAYER_ASSET_STATUS[id] = "loading";
+  const testImage = new Image();
+  testImage.onload = () => {
+   TEAM_PLAYER_ASSET_STATUS[id] = "loaded";
+   onReady(src);
+  };
+  testImage.onerror = () => {
+   TEAM_PLAYER_ASSET_STATUS[id] = "missing";
+  };
+  testImage.src = src;
  }
 
  function shouldUseTeamPlayerAsset(config){
@@ -86,6 +113,18 @@ const PlayerRenderer = (() => {
 
  function playerImageSource(config){
   return shouldUseTeamPlayerAsset(config)?getTeamPlayerAsset(config.teamId):PLAYER_ART_SRC;
+ }
+
+ function applyPlayerImageSource(img,config){
+  const initialSrc=playerImageSource(config);
+  img.src = initialSrc;
+  if(initialSrc !== PLAYER_ART_SRC || !shouldUseTeamPlayerAsset(config))return;
+  loadTeamPlayerAsset(config.teamId,src => {
+   if(img.dataset.renderState !== config.state)return;
+   if(img.dataset.teamId !== config.teamId)return;
+   if(img.dataset.uniform !== config.uniform)return;
+   img.src = src;
+  });
  }
 
  function uniformActive(config){
@@ -162,7 +201,6 @@ const PlayerRenderer = (() => {
   const sprite = ensureSprite(container, img);
   const colors=uniformColors(normalized);
 
-  img.src = playerImageSource(normalized);
   img.classList.add("player-img", "player-layer", "player-base-layer");
   container?.classList.add("player-render-surface");
   sprite?.classList.add("player-sprite");
@@ -173,6 +211,7 @@ const PlayerRenderer = (() => {
   applyRenderMetadata(img, normalized, surface.state);
   applyRenderMetadata(container, normalized, surface.state);
   applyRenderMetadata(sprite, normalized, surface.state);
+  applyPlayerImageSource(img, normalized);
 
   if(surface === surfaces.awards){
    container.classList.remove("cup-photo");
