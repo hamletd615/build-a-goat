@@ -1705,6 +1705,8 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
   --mobile-callout-basketballIQ-height:var(--mobile-build-callout-height);
   --mobile-callout-basketballIQ-scale:1;
   --mobile-callout-basketballIQ-z:20;
+  --mobile-callout-basketballIQ-node-x:0px;
+  --mobile-callout-basketballIQ-node-y:0px;
 
   --mobile-callout-shooting-base-y:176px;
   --mobile-callout-shooting-x:0px;
@@ -1713,6 +1715,8 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
   --mobile-callout-shooting-height:var(--mobile-build-callout-height);
   --mobile-callout-shooting-scale:1;
   --mobile-callout-shooting-z:20;
+  --mobile-callout-shooting-node-x:0px;
+  --mobile-callout-shooting-node-y:0px;
 
   --mobile-callout-handle-base-y:242px;
   --mobile-callout-handle-x:0px;
@@ -1721,6 +1725,8 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
   --mobile-callout-handle-height:var(--mobile-build-callout-height);
   --mobile-callout-handle-scale:1;
   --mobile-callout-handle-z:20;
+  --mobile-callout-handle-node-x:0px;
+  --mobile-callout-handle-node-y:0px;
 
   --mobile-callout-athleticism-base-y:308px;
   --mobile-callout-athleticism-x:0px;
@@ -1729,6 +1735,8 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
   --mobile-callout-athleticism-height:var(--mobile-build-callout-height);
   --mobile-callout-athleticism-scale:1;
   --mobile-callout-athleticism-z:20;
+  --mobile-callout-athleticism-node-x:0px;
+  --mobile-callout-athleticism-node-y:0px;
 
   --mobile-callout-size-base-y:374px;
   --mobile-callout-size-x:0px;
@@ -1737,6 +1745,8 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
   --mobile-callout-size-height:var(--mobile-build-callout-height);
   --mobile-callout-size-scale:1;
   --mobile-callout-size-z:20;
+  --mobile-callout-size-node-x:0px;
+  --mobile-callout-size-node-y:0px;
 
   --mobile-callout-clutch-base-y:144px;
   --mobile-callout-clutch-x:0px;
@@ -1745,6 +1755,8 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
   --mobile-callout-clutch-height:var(--mobile-build-callout-height);
   --mobile-callout-clutch-scale:1;
   --mobile-callout-clutch-z:20;
+  --mobile-callout-clutch-node-x:0px;
+  --mobile-callout-clutch-node-y:0px;
 
   --mobile-callout-leadership-base-y:210px;
   --mobile-callout-leadership-x:0px;
@@ -1753,6 +1765,8 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
   --mobile-callout-leadership-height:var(--mobile-build-callout-height);
   --mobile-callout-leadership-scale:1;
   --mobile-callout-leadership-z:20;
+  --mobile-callout-leadership-node-x:0px;
+  --mobile-callout-leadership-node-y:0px;
 
   --mobile-callout-rebounding-base-y:276px;
   --mobile-callout-rebounding-x:0px;
@@ -1761,6 +1775,8 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
   --mobile-callout-rebounding-height:var(--mobile-build-callout-height);
   --mobile-callout-rebounding-scale:1;
   --mobile-callout-rebounding-z:20;
+  --mobile-callout-rebounding-node-x:0px;
+  --mobile-callout-rebounding-node-y:0px;
 
   --mobile-callout-defense-base-y:342px;
   --mobile-callout-defense-x:0px;
@@ -1769,6 +1785,8 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
   --mobile-callout-defense-height:var(--mobile-build-callout-height);
   --mobile-callout-defense-scale:1;
   --mobile-callout-defense-z:20;
+  --mobile-callout-defense-node-x:0px;
+  --mobile-callout-defense-node-y:0px;
  }
 
  .app.mobile-tabs-suppressed{
@@ -1907,6 +1925,11 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
   user-select:none;
  }
 
+ body.mobile-callout-debug .app.mobile-tab-build #traitCardLayer .trait-card.mobile-callout-selected{
+  outline-color:#fbbf24;
+  box-shadow:0 0 0 2px rgba(251,191,36,.4),0 12px 26px rgba(0,0,0,.34);
+ }
+
  body.mobile-callout-debug .app.mobile-tab-build #traitCardLayer .trait-card:after{
   content:attr(data-mobile-callout-label);
   position:absolute;
@@ -1940,6 +1963,75 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
   letter-spacing:.8px;
   text-transform:uppercase;
   box-shadow:0 10px 24px rgba(0,0,0,.32);
+ }
+
+ body.mobile-callout-debug .mobile-callout-editor{
+  position:fixed;
+  left:max(12px,env(safe-area-inset-left));
+  right:max(12px,env(safe-area-inset-right));
+  bottom:calc(104px + env(safe-area-inset-bottom));
+  z-index:151;
+  padding:8px;
+  border:1px solid rgba(103,248,220,.34);
+  border-radius:14px;
+  background:rgba(4,9,15,.94);
+  box-shadow:0 16px 36px rgba(0,0,0,.38);
+  backdrop-filter:blur(12px);
+ }
+
+ body.mobile-callout-debug .mobile-callout-editor-title{
+  margin-bottom:6px;
+  color:#d9fff0;
+  font-size:10px;
+  font-weight:1000;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  text-align:center;
+ }
+
+ body.mobile-callout-debug .mobile-callout-editor-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:5px;
+ }
+
+ body.mobile-callout-debug .mobile-callout-editor button{
+  min-height:28px;
+  border-radius:8px;
+  border:1px solid rgba(103,248,220,.24);
+  background:#071b2e;
+  color:#a7f3c8;
+  font-size:9px;
+  font-weight:1000;
+  letter-spacing:.3px;
+ }
+
+ body.mobile-callout-debug .app.mobile-tab-build #mobileCalloutNodeLayer{
+  position:absolute;
+  inset:0;
+  z-index:60;
+  pointer-events:none;
+ }
+
+ body.mobile-callout-debug .app.mobile-tab-build .mobile-callout-node{
+  position:absolute;
+  width:22px;
+  height:22px;
+  min-width:22px;
+  min-height:22px;
+  padding:0;
+  border-radius:999px;
+  border:2px solid #061018;
+  background:#67f8dc;
+  box-shadow:0 0 0 2px rgba(103,248,220,.45),0 8px 14px rgba(0,0,0,.35);
+  transform:translate(-50%,-50%);
+  pointer-events:auto;
+  touch-action:none;
+ }
+
+ body.mobile-callout-debug .app.mobile-tab-build .mobile-callout-node.selected{
+  background:#fbbf24;
+  box-shadow:0 0 0 3px rgba(251,191,36,.42),0 8px 14px rgba(0,0,0,.35);
  }
 
  body.mobile-callout-dragging,

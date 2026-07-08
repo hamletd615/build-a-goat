@@ -204,6 +204,12 @@ function drawAnchoredCallouts(layer){
  const anchors=bodyAnchorMap();
  const complete=stage?.classList.contains("complete");
  const keys=complete?Object.keys(anchors):(TAB_TRAITS[activeStageTab]||TAB_TRAITS.physical);
+ const endpointFor=(key,a)=>{
+  const offset=window.mobileCalloutNodeOffset?.(key)||{x:0,y:0};
+  const x=playerBox?((playerBox.left-lr.left)+(a[0]*playerBox.width)):(a[0]*w);
+  const y=playerBox?((playerBox.top-lr.top)+(a[1]*playerBox.height)):(a[1]*h);
+  return [x+(offset.x||0),y+(offset.y||0)];
+ };
  const pathFor=(key)=>{
   const card=document.querySelector(`.tc-${key}`);
   const a=anchors[key];
@@ -212,25 +218,32 @@ function drawAnchoredCallouts(layer){
   const fromLeft=TRAIT_CARD_SIDES[key]==="left";
   const sx=(fromLeft?cr.right:cr.left)-sr.left;
   const sy=(cr.top-sr.top)+(cr.height*(TRAIT_CARD_ROW_OFFSET[key]||.5));
-  const ex=playerBox?((playerBox.left-lr.left)+(a[0]*playerBox.width)):(a[0]*w);
-  const ey=playerBox?((playerBox.top-lr.top)+(a[1]*playerBox.height)):(a[1]*h);
+  const [ex,ey]=endpointFor(key,a);
   const elbow=fromLeft?Math.min(sx+180,ex-28):Math.max(sx-180,ex+28);
   return `<path d="M${sx.toFixed(1)} ${sy.toFixed(1)} L${elbow.toFixed(1)} ${sy.toFixed(1)} L${ex.toFixed(1)} ${ey.toFixed(1)}"></path>`;
  };
- const circleFor=([x,y])=>{
-  const cx=playerBox?((playerBox.left-lr.left)+(x*playerBox.width)):(x*w);
-  const cy=playerBox?((playerBox.top-lr.top)+(y*playerBox.height)):(y*h);
+ const circleFor=(key,[x,y])=>{
+  const [cx,cy]=endpointFor(key,[x,y]);
   return `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="5.5"></circle>`;
  };
  const seen=[];
+ const hasMobileNodeOffsets=typeof window.mobileCalloutNodeOffset==="function"
+  &&keys.some(k=>{
+   const offset=window.mobileCalloutNodeOffset(k);
+   return !!(offset?.x||offset?.y);
+  });
  keys.forEach(k=>{
   const p=anchors[k];
   if(!p)return;
-  if(!seen.some(q=>Math.abs(q[0]-p[0])<.001&&Math.abs(q[1]-p[1])<.001))seen.push(p);
+  if(hasMobileNodeOffsets){
+   seen.push([k,p]);
+  }else if(!seen.some(([,q])=>Math.abs(q[0]-p[0])<.001&&Math.abs(q[1]-p[1])<.001)){
+   seen.push([k,p]);
+  }
  });
  layer.innerHTML=`<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">
   ${keys.map(pathFor).join("")}
-  ${seen.map(circleFor).join("")}
+  ${seen.map(([key,point])=>circleFor(key,point)).join("")}
  </svg>`;
 }
 function drawCallouts(){
