@@ -1,7 +1,7 @@
 // Developer-only callout layout editor.
 // Set CALLOUT_LAYOUT_EDITOR to true, tune a profile, export config, paste values
 // back into CALLOUT_LAYOUTS, then set CALLOUT_LAYOUT_EDITOR to false before ship.
-const CALLOUT_LAYOUT_EDITOR=false;
+const CALLOUT_LAYOUT_EDITOR=true;
 
 const CALLOUT_LAYOUT_TRAITS={
  iq:{label:"Basketball IQ"},
@@ -109,6 +109,27 @@ function normalizedNumber(value,fallback=0){
  return Number.isFinite(parsed)?parsed:fallback;
 }
 
+function safeSetPointerCapture(element,pointerId){
+ if(!element?.setPointerCapture||!Number.isFinite(pointerId)||!element.isConnected)return false;
+ try{
+  element.setPointerCapture(pointerId);
+  return true;
+ }catch{
+  return false;
+ }
+}
+
+function safeReleasePointerCapture(element,pointerId){
+ if(!element?.releasePointerCapture||!Number.isFinite(pointerId)||!element.isConnected)return false;
+ try{
+  if(element.hasPointerCapture&&!element.hasPointerCapture(pointerId))return false;
+  element.releasePointerCapture(pointerId);
+  return true;
+ }catch{
+  return false;
+ }
+}
+
 function patchCalloutValue(key,patch,profile=calloutActiveProfile()){
  const layout=calloutLayoutFor(profile);
  layout[key]={...DEFAULT_CALLOUT_VALUES,...layout[key],...patch};
@@ -184,6 +205,19 @@ function selectCallout(key){
  queueCalloutLayoutDraw();
 }
 
+function markCalloutSelection(key){
+ if(!CALLOUT_LAYOUT_TRAITS[key])return;
+ selectedCalloutKey=key;
+ document.querySelectorAll("#traitCardLayer .trait-card").forEach(card=>{
+  card.classList.toggle("callout-layout-selected",card.dataset.calloutKey===key);
+ });
+ document.querySelectorAll(".callout-layout-node").forEach(node=>{
+  node.classList.toggle("selected",node.dataset.calloutNode===key);
+ });
+ const label=document.querySelector(".callout-layout-selected-label");
+ if(label)label.textContent=`Active: ${calloutActiveProfile()} / ${CALLOUT_LAYOUT_TRAITS[key]?.label||key}`;
+}
+
 function startCalloutCardDrag(event){
  if(!CALLOUT_LAYOUT_EDITOR||event.target.closest(".callout-resize-handle"))return;
  const key=event.currentTarget.dataset.calloutKey;
@@ -193,7 +227,7 @@ function startCalloutCardDrag(event){
  selectCallout(key);
  const value=calloutValue(key);
  calloutDragState={key,pointerId:event.pointerId,startClientX:event.clientX,startClientY:event.clientY,startX:value.x,startY:value.y,card:event.currentTarget};
- event.currentTarget.setPointerCapture?.(event.pointerId);
+ safeSetPointerCapture(event.currentTarget,event.pointerId);
  document.body.classList.add("callout-layout-dragging");
  event.currentTarget.addEventListener("pointermove",moveCalloutCardDrag);
  event.currentTarget.addEventListener("pointerup",endCalloutCardDrag);
@@ -218,7 +252,7 @@ function moveCalloutCardDrag(event){
 function endCalloutCardDrag(event){
  if(!calloutDragState||event.pointerId!==calloutDragState.pointerId)return;
  const {card,pointerId}=calloutDragState;
- card.releasePointerCapture?.(pointerId);
+ safeReleasePointerCapture(card,pointerId);
  card.removeEventListener("pointermove",moveCalloutCardDrag);
  card.removeEventListener("pointerup",endCalloutCardDrag);
  card.removeEventListener("pointercancel",endCalloutCardDrag);
@@ -236,7 +270,7 @@ function startCalloutResize(event){
  selectCallout(key);
  const value=calloutValue(key);
  calloutResizeState={key,pointerId:event.pointerId,startClientX:event.clientX,startClientY:event.clientY,startWidth:value.width,startHeight:value.height,handle:event.currentTarget};
- event.currentTarget.setPointerCapture?.(event.pointerId);
+ safeSetPointerCapture(event.currentTarget,event.pointerId);
  document.body.classList.add("callout-layout-dragging");
  event.currentTarget.addEventListener("pointermove",moveCalloutResize);
  event.currentTarget.addEventListener("pointerup",endCalloutResize);
@@ -257,7 +291,7 @@ function moveCalloutResize(event){
 function endCalloutResize(event){
  if(!calloutResizeState||event.pointerId!==calloutResizeState.pointerId)return;
  const {handle,pointerId}=calloutResizeState;
- handle.releasePointerCapture?.(pointerId);
+ safeReleasePointerCapture(handle,pointerId);
  handle.removeEventListener("pointermove",moveCalloutResize);
  handle.removeEventListener("pointerup",endCalloutResize);
  handle.removeEventListener("pointercancel",endCalloutResize);
@@ -310,14 +344,17 @@ function startCalloutNodeDrag(event){
  if(!key)return;
  event.preventDefault();
  event.stopPropagation();
- selectCallout(key);
+ markCalloutSelection(key);
  const value=calloutValue(key);
  calloutNodeDragState={key,pointerId:event.pointerId,startClientX:event.clientX,startClientY:event.clientY,startX:value.nodeX,startY:value.nodeY,node:event.currentTarget};
- event.currentTarget.setPointerCapture?.(event.pointerId);
+ safeSetPointerCapture(event.currentTarget,event.pointerId);
  document.body.classList.add("callout-layout-dragging");
  event.currentTarget.addEventListener("pointermove",moveCalloutNodeDrag);
  event.currentTarget.addEventListener("pointerup",endCalloutNodeDrag);
  event.currentTarget.addEventListener("pointercancel",endCalloutNodeDrag);
+ document.addEventListener("pointermove",moveCalloutNodeDrag);
+ document.addEventListener("pointerup",endCalloutNodeDrag);
+ document.addEventListener("pointercancel",endCalloutNodeDrag);
 }
 
 function moveCalloutNodeDrag(event){
@@ -333,10 +370,13 @@ function moveCalloutNodeDrag(event){
 function endCalloutNodeDrag(event){
  if(!calloutNodeDragState||event.pointerId!==calloutNodeDragState.pointerId)return;
  const {node,pointerId}=calloutNodeDragState;
- node.releasePointerCapture?.(pointerId);
+ safeReleasePointerCapture(node,pointerId);
  node.removeEventListener("pointermove",moveCalloutNodeDrag);
  node.removeEventListener("pointerup",endCalloutNodeDrag);
  node.removeEventListener("pointercancel",endCalloutNodeDrag);
+ document.removeEventListener("pointermove",moveCalloutNodeDrag);
+ document.removeEventListener("pointerup",endCalloutNodeDrag);
+ document.removeEventListener("pointercancel",endCalloutNodeDrag);
  calloutNodeDragState=null;
  document.body.classList.remove("callout-layout-dragging");
  queueCalloutLayoutDraw();
