@@ -67,6 +67,7 @@ function goHome(){
   document.getElementById("seasonOverlay")?.classList.remove("open");
   document.getElementById("app")?.classList.remove("hidden");
   document.getElementById("home")?.classList.add("hidden");
+  if(typeof setMobileViewTab==="function")setMobileViewTab("spin");
 
   const next=document.getElementById("nextBtn");
   next.textContent="NEXT TRAIT";
@@ -83,6 +84,7 @@ function toast(m){let t=document.getElementById("toast");t.textContent=m;t.style
 function startDrafting(){
  document.getElementById("home").classList.add("hidden");
  document.getElementById("app").classList.remove("hidden");
+ if(typeof setMobileViewTab==="function")setMobileViewTab("spin");
  window.scrollTo(0,0);
  setTimeout(drawCallouts,100);
 }

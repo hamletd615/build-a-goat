@@ -16,7 +16,7 @@
 <div class="mode-row"><div class="mode-card locked"><h2>Legends</h2><span class="pill">Soon</span><div style="margin-top:28px;color:#9b8f5f;font-weight:1000;letter-spacing:3px;text-transform:uppercase;font-size:12px">Coming Soon</div></div><div class="mode-card"><h2>Classic</h2><span class="pill">Current NBA</span><button class="start-btn" id="startBtn" onclick="startDrafting()">Start Drafting -></button></div></div>
 </section>
 
-<main class="app hidden" id="app">
+<main class="app hidden mobile-tab-spin" id="app">
   <div class="topbar">
     <button class="brand home-link" onclick="goHome()">Build<span>-A-</span>GOAT<small>BETA</small></button>
     <div class="top-actions">
@@ -113,6 +113,11 @@
       </div>
     </aside>
   </div>
+
+  <nav class="mobile-tab-nav" aria-label="Mobile view">
+    <button type="button" class="mobile-tab-button active" id="mobileSpinTab" aria-pressed="true" onclick="setMobileViewTab('spin')">SPIN</button>
+    <button type="button" class="mobile-tab-button" id="mobileBuildTab" aria-pressed="false" onclick="setMobileViewTab('build')">BUILD</button>
+  </nav>
 
 </main>
 <div class="season-overlay" id="seasonOverlay">
@@ -242,6 +247,7 @@
 <script src="./js/simulation.js"></script>
   <script src="./js/share.js"></script>
   <script src="./js/devTools.js"></script>
+  <script src="./js/mobileTabs.js"></script>
   <script src="./js/app.js"></script>
 </body>
 </html>
