@@ -1684,60 +1684,87 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
   --mobile-build-callout-top-rebounding:276px;
   --mobile-build-callout-top-defense:342px;
 
-  /* Per-callout mobile placement. Tune these one card at a time. */
-  --mobile-build-callout-iq-x:var(--mobile-build-left-callout-x);
-  --mobile-build-callout-iq-y:110px;
-  --mobile-build-callout-iq-width:var(--mobile-build-callout-width);
-  --mobile-build-callout-iq-height:var(--mobile-build-callout-height);
-  --mobile-build-callout-iq-scale:1;
+  /*
+   Per-callout mobile placement.
+   x is an offset: positive moves right, negative moves left.
+   y is an offset: positive moves down, negative moves up.
+   scale controls card size without changing anchors or renderer layout.
+   z controls stacking only when cards overlap.
+  */
+  --mobile-callout-left-base-x:var(--mobile-build-left-callout-x);
+  --mobile-callout-right-base-x:var(--mobile-build-right-callout-x);
 
-  --mobile-build-callout-shooting-x:var(--mobile-build-left-callout-x);
-  --mobile-build-callout-shooting-y:176px;
-  --mobile-build-callout-shooting-width:var(--mobile-build-callout-width);
-  --mobile-build-callout-shooting-height:var(--mobile-build-callout-height);
-  --mobile-build-callout-shooting-scale:1;
+  --mobile-callout-basketballIQ-base-y:110px;
+  --mobile-callout-basketballIQ-x:0px;
+  --mobile-callout-basketballIQ-y:0px;
+  --mobile-callout-basketballIQ-width:var(--mobile-build-callout-width);
+  --mobile-callout-basketballIQ-height:var(--mobile-build-callout-height);
+  --mobile-callout-basketballIQ-scale:1;
+  --mobile-callout-basketballIQ-z:20;
 
-  --mobile-build-callout-handling-x:var(--mobile-build-left-callout-x);
-  --mobile-build-callout-handling-y:242px;
-  --mobile-build-callout-handling-width:var(--mobile-build-callout-width);
-  --mobile-build-callout-handling-height:var(--mobile-build-callout-height);
-  --mobile-build-callout-handling-scale:1;
+  --mobile-callout-shooting-base-y:176px;
+  --mobile-callout-shooting-x:0px;
+  --mobile-callout-shooting-y:0px;
+  --mobile-callout-shooting-width:var(--mobile-build-callout-width);
+  --mobile-callout-shooting-height:var(--mobile-build-callout-height);
+  --mobile-callout-shooting-scale:1;
+  --mobile-callout-shooting-z:20;
 
-  --mobile-build-callout-speed-x:var(--mobile-build-left-callout-x);
-  --mobile-build-callout-speed-y:308px;
-  --mobile-build-callout-speed-width:var(--mobile-build-callout-width);
-  --mobile-build-callout-speed-height:var(--mobile-build-callout-height);
-  --mobile-build-callout-speed-scale:1;
+  --mobile-callout-handle-base-y:242px;
+  --mobile-callout-handle-x:0px;
+  --mobile-callout-handle-y:0px;
+  --mobile-callout-handle-width:var(--mobile-build-callout-width);
+  --mobile-callout-handle-height:var(--mobile-build-callout-height);
+  --mobile-callout-handle-scale:1;
+  --mobile-callout-handle-z:20;
 
-  --mobile-build-callout-size-x:var(--mobile-build-left-callout-x);
-  --mobile-build-callout-size-y:374px;
-  --mobile-build-callout-size-width:var(--mobile-build-callout-width);
-  --mobile-build-callout-size-height:var(--mobile-build-callout-height);
-  --mobile-build-callout-size-scale:1;
+  --mobile-callout-athleticism-base-y:308px;
+  --mobile-callout-athleticism-x:0px;
+  --mobile-callout-athleticism-y:0px;
+  --mobile-callout-athleticism-width:var(--mobile-build-callout-width);
+  --mobile-callout-athleticism-height:var(--mobile-build-callout-height);
+  --mobile-callout-athleticism-scale:1;
+  --mobile-callout-athleticism-z:20;
 
-  --mobile-build-callout-clutch-x:var(--mobile-build-right-callout-x);
-  --mobile-build-callout-clutch-y:144px;
-  --mobile-build-callout-clutch-width:var(--mobile-build-callout-width);
-  --mobile-build-callout-clutch-height:var(--mobile-build-callout-height);
-  --mobile-build-callout-clutch-scale:1;
+  --mobile-callout-size-base-y:374px;
+  --mobile-callout-size-x:0px;
+  --mobile-callout-size-y:0px;
+  --mobile-callout-size-width:var(--mobile-build-callout-width);
+  --mobile-callout-size-height:var(--mobile-build-callout-height);
+  --mobile-callout-size-scale:1;
+  --mobile-callout-size-z:20;
 
-  --mobile-build-callout-leadership-x:var(--mobile-build-right-callout-x);
-  --mobile-build-callout-leadership-y:210px;
-  --mobile-build-callout-leadership-width:var(--mobile-build-callout-width);
-  --mobile-build-callout-leadership-height:var(--mobile-build-callout-height);
-  --mobile-build-callout-leadership-scale:1;
+  --mobile-callout-clutch-base-y:144px;
+  --mobile-callout-clutch-x:0px;
+  --mobile-callout-clutch-y:0px;
+  --mobile-callout-clutch-width:var(--mobile-build-callout-width);
+  --mobile-callout-clutch-height:var(--mobile-build-callout-height);
+  --mobile-callout-clutch-scale:1;
+  --mobile-callout-clutch-z:20;
 
-  --mobile-build-callout-rebounding-x:var(--mobile-build-right-callout-x);
-  --mobile-build-callout-rebounding-y:276px;
-  --mobile-build-callout-rebounding-width:var(--mobile-build-callout-width);
-  --mobile-build-callout-rebounding-height:var(--mobile-build-callout-height);
-  --mobile-build-callout-rebounding-scale:1;
+  --mobile-callout-leadership-base-y:210px;
+  --mobile-callout-leadership-x:0px;
+  --mobile-callout-leadership-y:0px;
+  --mobile-callout-leadership-width:var(--mobile-build-callout-width);
+  --mobile-callout-leadership-height:var(--mobile-build-callout-height);
+  --mobile-callout-leadership-scale:1;
+  --mobile-callout-leadership-z:20;
 
-  --mobile-build-callout-defense-x:var(--mobile-build-right-callout-x);
-  --mobile-build-callout-defense-y:342px;
-  --mobile-build-callout-defense-width:var(--mobile-build-callout-width);
-  --mobile-build-callout-defense-height:var(--mobile-build-callout-height);
-  --mobile-build-callout-defense-scale:1;
+  --mobile-callout-rebounding-base-y:276px;
+  --mobile-callout-rebounding-x:0px;
+  --mobile-callout-rebounding-y:0px;
+  --mobile-callout-rebounding-width:var(--mobile-build-callout-width);
+  --mobile-callout-rebounding-height:var(--mobile-build-callout-height);
+  --mobile-callout-rebounding-scale:1;
+  --mobile-callout-rebounding-z:20;
+
+  --mobile-callout-defense-base-y:342px;
+  --mobile-callout-defense-x:0px;
+  --mobile-callout-defense-y:0px;
+  --mobile-callout-defense-width:var(--mobile-build-callout-width);
+  --mobile-callout-defense-height:var(--mobile-build-callout-height);
+  --mobile-callout-defense-scale:1;
+  --mobile-callout-defense-z:20;
  }
 
  .app.mobile-tabs-suppressed{
@@ -1858,15 +1885,18 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
   line-height:1.08;
  }
 
- .app.mobile-tab-build #traitCardLayer .tc-iq{left:var(--mobile-build-callout-iq-x)!important;top:var(--mobile-build-callout-iq-y)!important;width:var(--mobile-build-callout-iq-width)!important;max-width:var(--mobile-build-callout-iq-width)!important;height:var(--mobile-build-callout-iq-height)!important;min-height:var(--mobile-build-callout-iq-height)!important;transform:scale(var(--mobile-build-callout-iq-scale));transform-origin:left top}
- .app.mobile-tab-build #traitCardLayer .tc-shooting{left:var(--mobile-build-callout-shooting-x)!important;top:var(--mobile-build-callout-shooting-y)!important;width:var(--mobile-build-callout-shooting-width)!important;max-width:var(--mobile-build-callout-shooting-width)!important;height:var(--mobile-build-callout-shooting-height)!important;min-height:var(--mobile-build-callout-shooting-height)!important;transform:scale(var(--mobile-build-callout-shooting-scale));transform-origin:left top}
- .app.mobile-tab-build #traitCardLayer .tc-handling{left:var(--mobile-build-callout-handling-x)!important;top:var(--mobile-build-callout-handling-y)!important;width:var(--mobile-build-callout-handling-width)!important;max-width:var(--mobile-build-callout-handling-width)!important;height:var(--mobile-build-callout-handling-height)!important;min-height:var(--mobile-build-callout-handling-height)!important;transform:scale(var(--mobile-build-callout-handling-scale));transform-origin:left top}
- .app.mobile-tab-build #traitCardLayer .tc-speed{left:var(--mobile-build-callout-speed-x)!important;top:var(--mobile-build-callout-speed-y)!important;width:var(--mobile-build-callout-speed-width)!important;max-width:var(--mobile-build-callout-speed-width)!important;height:var(--mobile-build-callout-speed-height)!important;min-height:var(--mobile-build-callout-speed-height)!important;transform:scale(var(--mobile-build-callout-speed-scale));transform-origin:left top}
- .app.mobile-tab-build #traitCardLayer .tc-size{left:var(--mobile-build-callout-size-x)!important;top:var(--mobile-build-callout-size-y)!important;width:var(--mobile-build-callout-size-width)!important;max-width:var(--mobile-build-callout-size-width)!important;height:var(--mobile-build-callout-size-height)!important;min-height:var(--mobile-build-callout-size-height)!important;transform:scale(var(--mobile-build-callout-size-scale));transform-origin:left top}
- .app.mobile-tab-build #traitCardLayer .tc-clutch{right:var(--mobile-build-callout-clutch-x)!important;top:var(--mobile-build-callout-clutch-y)!important;width:var(--mobile-build-callout-clutch-width)!important;max-width:var(--mobile-build-callout-clutch-width)!important;height:var(--mobile-build-callout-clutch-height)!important;min-height:var(--mobile-build-callout-clutch-height)!important;transform:scale(var(--mobile-build-callout-clutch-scale));transform-origin:right top}
- .app.mobile-tab-build #traitCardLayer .tc-leadership{right:var(--mobile-build-callout-leadership-x)!important;top:var(--mobile-build-callout-leadership-y)!important;width:var(--mobile-build-callout-leadership-width)!important;max-width:var(--mobile-build-callout-leadership-width)!important;height:var(--mobile-build-callout-leadership-height)!important;min-height:var(--mobile-build-callout-leadership-height)!important;transform:scale(var(--mobile-build-callout-leadership-scale));transform-origin:right top}
- .app.mobile-tab-build #traitCardLayer .tc-rebounding{right:var(--mobile-build-callout-rebounding-x)!important;top:var(--mobile-build-callout-rebounding-y)!important;width:var(--mobile-build-callout-rebounding-width)!important;max-width:var(--mobile-build-callout-rebounding-width)!important;height:var(--mobile-build-callout-rebounding-height)!important;min-height:var(--mobile-build-callout-rebounding-height)!important;transform:scale(var(--mobile-build-callout-rebounding-scale));transform-origin:right top}
- .app.mobile-tab-build #traitCardLayer .tc-defense{right:var(--mobile-build-callout-defense-x)!important;top:var(--mobile-build-callout-defense-y)!important;width:var(--mobile-build-callout-defense-width)!important;max-width:var(--mobile-build-callout-defense-width)!important;height:var(--mobile-build-callout-defense-height)!important;min-height:var(--mobile-build-callout-defense-height)!important;transform:scale(var(--mobile-build-callout-defense-scale));transform-origin:right top}
+ .app.mobile-tab-build #traitCardLayer .tc-iq{left:calc(var(--mobile-callout-left-base-x) + var(--mobile-callout-basketballIQ-x))!important;right:auto!important;top:calc(var(--mobile-callout-basketballIQ-base-y) + var(--mobile-callout-basketballIQ-y))!important;width:var(--mobile-callout-basketballIQ-width)!important;max-width:var(--mobile-callout-basketballIQ-width)!important;height:var(--mobile-callout-basketballIQ-height)!important;min-height:var(--mobile-callout-basketballIQ-height)!important;transform:scale(var(--mobile-callout-basketballIQ-scale));transform-origin:left top;z-index:var(--mobile-callout-basketballIQ-z)!important}
+ .app.mobile-tab-build #traitCardLayer .tc-shooting{left:calc(var(--mobile-callout-left-base-x) + var(--mobile-callout-shooting-x))!important;right:auto!important;top:calc(var(--mobile-callout-shooting-base-y) + var(--mobile-callout-shooting-y))!important;width:var(--mobile-callout-shooting-width)!important;max-width:var(--mobile-callout-shooting-width)!important;height:var(--mobile-callout-shooting-height)!important;min-height:var(--mobile-callout-shooting-height)!important;transform:scale(var(--mobile-callout-shooting-scale));transform-origin:left top;z-index:var(--mobile-callout-shooting-z)!important}
+ .app.mobile-tab-build #traitCardLayer .tc-handling{left:calc(var(--mobile-callout-left-base-x) + var(--mobile-callout-handle-x))!important;right:auto!important;top:calc(var(--mobile-callout-handle-base-y) + var(--mobile-callout-handle-y))!important;width:var(--mobile-callout-handle-width)!important;max-width:var(--mobile-callout-handle-width)!important;height:var(--mobile-callout-handle-height)!important;min-height:var(--mobile-callout-handle-height)!important;transform:scale(var(--mobile-callout-handle-scale));transform-origin:left top;z-index:var(--mobile-callout-handle-z)!important}
+ .app.mobile-tab-build #traitCardLayer .tc-speed{left:calc(var(--mobile-callout-left-base-x) + var(--mobile-callout-athleticism-x))!important;right:auto!important;top:calc(var(--mobile-callout-athleticism-base-y) + var(--mobile-callout-athleticism-y))!important;width:var(--mobile-callout-athleticism-width)!important;max-width:var(--mobile-callout-athleticism-width)!important;height:var(--mobile-callout-athleticism-height)!important;min-height:var(--mobile-callout-athleticism-height)!important;transform:scale(var(--mobile-callout-athleticism-scale));transform-origin:left top;z-index:var(--mobile-callout-athleticism-z)!important}
+ .app.mobile-tab-build #traitCardLayer .tc-size{left:calc(var(--mobile-callout-left-base-x) + var(--mobile-callout-size-x))!important;right:auto!important;top:calc(var(--mobile-callout-size-base-y) + var(--mobile-callout-size-y))!important;width:var(--mobile-callout-size-width)!important;max-width:var(--mobile-callout-size-width)!important;height:var(--mobile-callout-size-height)!important;min-height:var(--mobile-callout-size-height)!important;transform:scale(var(--mobile-callout-size-scale));transform-origin:left top;z-index:var(--mobile-callout-size-z)!important}
+ .app.mobile-tab-build #traitCardLayer .tc-clutch{left:calc(100% - var(--mobile-callout-clutch-width) - var(--mobile-callout-right-base-x) + var(--mobile-callout-clutch-x))!important;right:auto!important;top:calc(var(--mobile-callout-clutch-base-y) + var(--mobile-callout-clutch-y))!important;width:var(--mobile-callout-clutch-width)!important;max-width:var(--mobile-callout-clutch-width)!important;height:var(--mobile-callout-clutch-height)!important;min-height:var(--mobile-callout-clutch-height)!important;transform:scale(var(--mobile-callout-clutch-scale));transform-origin:right top;z-index:var(--mobile-callout-clutch-z)!important}
+ .app.mobile-tab-build #traitCardLayer .tc-leadership{left:calc(100% - var(--mobile-callout-leadership-width) - var(--mobile-callout-right-base-x) + var(--mobile-callout-leadership-x))!important;right:auto!important;top:calc(var(--mobile-callout-leadership-base-y) + var(--mobile-callout-leadership-y))!important;width:var(--mobile-callout-leadership-width)!important;max-width:var(--mobile-callout-leadership-width)!important;height:var(--mobile-callout-leadership-height)!important;min-height:var(--mobile-callout-leadership-height)!important;transform:scale(var(--mobile-callout-leadership-scale));transform-origin:right top;z-index:var(--mobile-callout-leadership-z)!important}
+ .app.mobile-tab-build #traitCardLayer .tc-rebounding{left:calc(100% - var(--mobile-callout-rebounding-width) - var(--mobile-callout-right-base-x) + var(--mobile-callout-rebounding-x))!important;right:auto!important;top:calc(var(--mobile-callout-rebounding-base-y) + var(--mobile-callout-rebounding-y))!important;width:var(--mobile-callout-rebounding-width)!important;max-width:var(--mobile-callout-rebounding-width)!important;height:var(--mobile-callout-rebounding-height)!important;min-height:var(--mobile-callout-rebounding-height)!important;transform:scale(var(--mobile-callout-rebounding-scale));transform-origin:right top;z-index:var(--mobile-callout-rebounding-z)!important}
+ .app.mobile-tab-build #traitCardLayer .tc-defense{left:calc(100% - var(--mobile-callout-defense-width) - var(--mobile-callout-right-base-x) + var(--mobile-callout-defense-x))!important;right:auto!important;top:calc(var(--mobile-callout-defense-base-y) + var(--mobile-callout-defense-y))!important;width:var(--mobile-callout-defense-width)!important;max-width:var(--mobile-callout-defense-width)!important;height:var(--mobile-callout-defense-height)!important;min-height:var(--mobile-callout-defense-height)!important;transform:scale(var(--mobile-callout-defense-scale));transform-origin:right top;z-index:var(--mobile-callout-defense-z)!important}
+
+ body.mobile-callout-debug .app.mobile-tab-build #traitCardLayer .trait-card{outline:2px dashed #67f8dc;outline-offset:2px}
+ body.mobile-callout-debug .app.mobile-tab-build #traitCardLayer .trait-card:after{content:attr(data-trait);position:absolute;left:4px;top:-18px;padding:2px 5px;border-radius:5px;background:#67f8dc;color:#061018;font-size:9px;font-weight:1000;letter-spacing:.4px;text-transform:uppercase;pointer-events:none}
 
  .app.mobile-tab-build .side.complete .ovr-card{order:0}
  .app.mobile-tab-build .side.complete .build-name{order:1}

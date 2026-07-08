@@ -9,8 +9,12 @@ const MOBILE_TAB_BLOCKING_OVERLAYS=[
  "shareOverlay"
 ];
 
+// Set to true while tuning mobile Build callout positions.
+const MOBILE_CALLOUT_TUNING=false;
+
 let mobileTabObserverReady=false;
 let mobileCompletionObserverReady=false;
+let mobileNextTraitObserverReady=false;
 let mobileCompletionAutoSwitched=false;
 
 function mobileBlockingOverlayOpen(){
@@ -55,6 +59,10 @@ function syncMobileTabControls(){
  syncMobileBuildProgress();
 }
 
+function syncMobileCalloutDebug(){
+ document.body?.classList.toggle("mobile-callout-debug",MOBILE_CALLOUT_TUNING);
+}
+
 function syncMobileCompletionTab(){
  const stage=document.getElementById("stage");
  if(!stage)return;
@@ -94,6 +102,37 @@ function initMobileCompletionObserver(){
  syncMobileCompletionTab();
 }
 
+function initMobileNextTraitHandler(){
+ if(mobileNextTraitObserverReady)return;
+ const next=document.getElementById("nextBtn");
+ if(!next)return;
+
+ next.addEventListener("click",event=>{
+  const app=document.getElementById("app");
+  const shouldSwitchFirst=isMobileBuildViewport()
+   &&app?.classList.contains("mobile-tab-build")
+   &&typeof isComplete==="function"
+   &&!isComplete()
+   &&typeof current!=="undefined"
+   &&!current
+   &&typeof isSpinning!=="undefined"
+   &&!isSpinning;
+
+  if(!shouldSwitchFirst)return;
+
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  setMobileViewTab("spin");
+  requestAnimationFrame(()=>{
+   requestAnimationFrame(()=>{
+    if(typeof spin==="function")spin();
+   });
+  });
+ },true);
+
+ mobileNextTraitObserverReady=true;
+}
+
 function setMobileViewTab(tab){
  const app=document.getElementById("app");
  const spin=document.getElementById("mobileSpinTab");
@@ -131,9 +170,14 @@ function setMobileViewTab(tab){
 window.setMobileViewTab=setMobileViewTab;
 window.syncMobileTabControls=syncMobileTabControls;
 window.syncMobileCompletionTab=syncMobileCompletionTab;
+window.syncMobileCalloutDebug=syncMobileCalloutDebug;
 document.addEventListener("DOMContentLoaded",initMobileTabObservers);
 document.addEventListener("DOMContentLoaded",initMobileCompletionObserver);
+document.addEventListener("DOMContentLoaded",initMobileNextTraitHandler);
 document.addEventListener("DOMContentLoaded",syncMobileTabControls);
+document.addEventListener("DOMContentLoaded",syncMobileCalloutDebug);
 requestAnimationFrame(initMobileTabObservers);
 requestAnimationFrame(initMobileCompletionObserver);
+requestAnimationFrame(initMobileNextTraitHandler);
 requestAnimationFrame(syncMobileTabControls);
+requestAnimationFrame(syncMobileCalloutDebug);
