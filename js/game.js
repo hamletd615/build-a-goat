@@ -150,6 +150,7 @@ function isComplete(){
 
 function unlockSim(){
   document.getElementById("stage").classList.add("complete");
+  document.querySelector(".side")?.classList.add("complete");
   activeStageTab="physical";
   render();
   document.getElementById("nextBtn").disabled=false;
