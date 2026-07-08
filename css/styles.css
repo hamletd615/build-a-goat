@@ -1497,6 +1497,10 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
  display:none;
 }
 
+.mobile-callout-export{
+ display:none;
+}
+
 @media(max-width:768px){
  .app{
   padding-bottom:calc(104px + env(safe-area-inset-bottom));
@@ -1895,8 +1899,59 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
  .app.mobile-tab-build #traitCardLayer .tc-rebounding{left:calc(100% - var(--mobile-callout-rebounding-width) - var(--mobile-callout-right-base-x) + var(--mobile-callout-rebounding-x))!important;right:auto!important;top:calc(var(--mobile-callout-rebounding-base-y) + var(--mobile-callout-rebounding-y))!important;width:var(--mobile-callout-rebounding-width)!important;max-width:var(--mobile-callout-rebounding-width)!important;height:var(--mobile-callout-rebounding-height)!important;min-height:var(--mobile-callout-rebounding-height)!important;transform:scale(var(--mobile-callout-rebounding-scale));transform-origin:right top;z-index:var(--mobile-callout-rebounding-z)!important}
  .app.mobile-tab-build #traitCardLayer .tc-defense{left:calc(100% - var(--mobile-callout-defense-width) - var(--mobile-callout-right-base-x) + var(--mobile-callout-defense-x))!important;right:auto!important;top:calc(var(--mobile-callout-defense-base-y) + var(--mobile-callout-defense-y))!important;width:var(--mobile-callout-defense-width)!important;max-width:var(--mobile-callout-defense-width)!important;height:var(--mobile-callout-defense-height)!important;min-height:var(--mobile-callout-defense-height)!important;transform:scale(var(--mobile-callout-defense-scale));transform-origin:right top;z-index:var(--mobile-callout-defense-z)!important}
 
- body.mobile-callout-debug .app.mobile-tab-build #traitCardLayer .trait-card{outline:2px dashed #67f8dc;outline-offset:2px}
- body.mobile-callout-debug .app.mobile-tab-build #traitCardLayer .trait-card:after{content:attr(data-trait);position:absolute;left:4px;top:-18px;padding:2px 5px;border-radius:5px;background:#67f8dc;color:#061018;font-size:9px;font-weight:1000;letter-spacing:.4px;text-transform:uppercase;pointer-events:none}
+ body.mobile-callout-debug .app.mobile-tab-build #traitCardLayer .trait-card{
+  outline:2px dashed #67f8dc;
+  outline-offset:2px;
+  cursor:grab;
+  touch-action:none;
+  user-select:none;
+ }
+
+ body.mobile-callout-debug .app.mobile-tab-build #traitCardLayer .trait-card:after{
+  content:attr(data-mobile-callout-label);
+  position:absolute;
+  left:4px;
+  top:-18px;
+  padding:2px 5px;
+  border-radius:5px;
+  background:#67f8dc;
+  color:#061018;
+  font-size:9px;
+  font-weight:1000;
+  letter-spacing:.4px;
+  text-transform:uppercase;
+  pointer-events:none;
+ }
+
+ body.mobile-callout-debug .mobile-callout-export{
+  display:block;
+  position:fixed;
+  right:max(12px,env(safe-area-inset-right));
+  top:calc(12px + env(safe-area-inset-top));
+  z-index:150;
+  height:38px;
+  padding:0 14px;
+  border-radius:999px;
+  border:1px solid rgba(103,248,220,.7);
+  background:#071b2e;
+  color:#d9fff0;
+  font-size:11px;
+  font-weight:1000;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+  box-shadow:0 10px 24px rgba(0,0,0,.32);
+ }
+
+ body.mobile-callout-dragging,
+ body.mobile-callout-dragging *{
+  user-select:none!important;
+  -webkit-user-select:none!important;
+ }
+
+ body.mobile-callout-dragging{
+  overflow:hidden;
+  touch-action:none;
+ }
 
  .app.mobile-tab-build .side.complete .ovr-card{order:0}
  .app.mobile-tab-build .side.complete .build-name{order:1}
