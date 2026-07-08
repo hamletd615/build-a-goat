@@ -4,12 +4,17 @@ const PlayerRenderer = (() => {
  const TEAM_PLAYER_ASSET_ROOT = "./assets/teamPlayers";
  // Team-player assets must be transparent PNGs with the same canvas as base-player.png.
  // CSS cannot safely remove a baked white background without damaging the player image.
- const TEAM_PLAYER_ASSETS = new Set(["CHI"]);
+ const TEAM_PLAYER_ASSETS = new Set([
+  "ATL","BOS","BKN","CHA","CHI","CLE","DAL","DEN","DET","GSW",
+  "HOU","IND","LAC","LAL","MEM","MIA","MIL","MIN","NOP","NYK",
+  "OKC","ORL","PHI","PHX","POR","SAC","SAS","TOR","UTA","WAS"
+ ]);
  const TEAM_PLAYER_ASSET_STATUS = {};
  const TEAM_PLAYER_ASSET_WAITERS = {};
  const UNIFORM_ASSET_ROOT = "./assets/uniforms";
  const DEFAULT_UNIFORM = "default";
  const POST_BUILD_UNIFORM_STATES = new Set(["complete", "season", "awards", "results"]);
+ const TEAM_PLAYER_ASSET_STATES = new Set(["complete", "season", "awards", "results"]);
  const UNIFORM_VISUALS_ENABLED = false;
  const layoutSnapshots = {};
  const LAYOUT_EPSILON = 0.5;
@@ -85,6 +90,10 @@ const PlayerRenderer = (() => {
   return `${TEAM_PLAYER_ASSET_ROOT}/${id}.png`;
  }
 
+ function getCompletedPlayerAsset(teamId){
+  return getTeamPlayerAsset(teamId);
+ }
+
  function teamPlayerAssetPath(teamId){
   const id=normalizedTeamId(teamId);
   return id && TEAM_PLAYER_ASSETS.has(id) ? `${TEAM_PLAYER_ASSET_ROOT}/${id}.png` : "";
@@ -136,11 +145,11 @@ const PlayerRenderer = (() => {
  }
 
  function shouldUseTeamPlayerAsset(config){
-  return config.uniform === "team" && !!config.teamId && POST_BUILD_UNIFORM_STATES.has(config.state);
+  return config.uniform === "team" && !!config.teamId && TEAM_PLAYER_ASSET_STATES.has(config.state);
  }
 
  function playerImageSource(config){
-  return shouldUseTeamPlayerAsset(config)?getTeamPlayerAsset(config.teamId):PLAYER_ART_SRC;
+  return shouldUseTeamPlayerAsset(config)?getCompletedPlayerAsset(config.teamId):PLAYER_ART_SRC;
  }
 
  function applyPlayerImageSource(img,config){
@@ -314,7 +323,7 @@ const PlayerRenderer = (() => {
   }
  }
 
- return {render: renderToSurface, playerArtSrc: PLAYER_ART_SRC, getPlayerRenderBox, getTeamPlayerAsset};
+ return {render: renderToSurface, playerArtSrc: PLAYER_ART_SRC, getPlayerRenderBox, getTeamPlayerAsset, getCompletedPlayerAsset};
 })();
 
 function renderPlayer(config){
@@ -329,5 +338,10 @@ function getTeamPlayerAsset(teamId){
  return PlayerRenderer.getTeamPlayerAsset(teamId);
 }
 
+function getCompletedPlayerAsset(teamId){
+ return PlayerRenderer.getCompletedPlayerAsset(teamId);
+}
+
 window.getPlayerRenderBox = getPlayerRenderBox;
 window.getTeamPlayerAsset = getTeamPlayerAsset;
+window.getCompletedPlayerAsset = getCompletedPlayerAsset;
