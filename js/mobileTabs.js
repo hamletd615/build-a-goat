@@ -18,7 +18,7 @@ const MOBILE_TAB_BLOCKING_OVERLAYS=[
 // 6. Paste exported values into the mobile layout config.
 // 7. Set MOBILE_CALLOUT_TUNING back to false.
 // 8. Commit the locked values.
-const MOBILE_CALLOUT_TUNING=false;
+const MOBILE_CALLOUT_TUNING=true;
 const MOBILE_CALLOUT_TRAITS={
  basketballIQ:{selector:".tc-iq",css:"basketballIQ",label:"basketballIQ",anchor:"iq"},
  shooting:{selector:".tc-shooting",css:"shooting",label:"shooting",anchor:"shooting"},
