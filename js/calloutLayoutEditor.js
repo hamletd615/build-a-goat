@@ -71,6 +71,8 @@ let calloutDragState=null;
 let calloutResizeState=null;
 let calloutNodeDragState=null;
 let calloutDrawQueued=false;
+let calloutPanelCollapsed=false;
+let calloutPanelDragState=null;
 
 function calloutRuntimeProfile(){
  if(window.matchMedia?.("(orientation: landscape) and (max-height: 520px)")?.matches)return"mobileLandscape";
@@ -128,6 +130,13 @@ function safeReleasePointerCapture(element,pointerId){
  }catch{
   return false;
  }
+}
+
+function calloutEditorMobileViewport(){
+ return !!(
+  window.matchMedia?.("(max-width: 768px)")?.matches
+  || window.matchMedia?.("(orientation: landscape) and (max-height: 520px)")?.matches
+ );
 }
 
 function patchCalloutValue(key,patch,profile=calloutActiveProfile()){
@@ -406,7 +415,11 @@ function syncCalloutEditorPanel(){
   panel.id="calloutLayoutEditorPanel";
   panel.className="callout-layout-editor-panel";
   panel.innerHTML=`
-   <div class="callout-layout-title">Layout Editor</div>
+   <div class="callout-layout-toolbar-head" data-editor-drag-handle="true">
+    <div class="callout-layout-title">Layout Editor</div>
+    <button type="button" class="callout-layout-collapse" data-action="toggleCollapse" aria-label="Collapse layout editor">-</button>
+   </div>
+   <div class="callout-layout-body">
    <label>Profile <select id="calloutProfileSelect">
     <option value="desktop">Desktop</option>
     <option value="mobilePortrait">Mobile Portrait</option>
@@ -433,16 +446,21 @@ function syncCalloutEditorPanel(){
     <button type="button" data-action="exportAll">Export All Profiles</button>
     <button type="button" data-action="import">Import/Paste Layout</button>
    </div>
+   </div>
   `;
   panel.addEventListener("click",handleEditorAction);
+  panel.querySelector("[data-editor-drag-handle]").addEventListener("pointerdown",startCalloutPanelDrag);
   panel.querySelector("#calloutProfileSelect").addEventListener("change",event=>{
    activeCalloutEditorProfile=event.target.value;
    applyCalloutLayout();
    queueCalloutLayoutDraw();
   });
-  document.body.appendChild(panel);
+ document.body.appendChild(panel);
  }
  if(!activeCalloutEditorProfile)activeCalloutEditorProfile=calloutRuntimeProfile();
+ panel.classList.toggle("collapsed",calloutPanelCollapsed);
+ panel.querySelector(".callout-layout-collapse").textContent=calloutPanelCollapsed?"+":"-";
+ panel.querySelector(".callout-layout-collapse").setAttribute("aria-label",calloutPanelCollapsed?"Expand layout editor":"Collapse layout editor");
  panel.querySelector("#calloutProfileSelect").value=activeCalloutEditorProfile;
  panel.querySelector(".callout-layout-selected-label").textContent=`Active: ${activeCalloutEditorProfile} / ${CALLOUT_LAYOUT_TRAITS[selectedCalloutKey]?.label||selectedCalloutKey}`;
  addResizeHandles();
@@ -457,6 +475,7 @@ function handleEditorAction(event){
  const button=event.target.closest("button[data-action]");
  if(!button)return;
  const action=button.dataset.action;
+ if(action==="toggleCollapse")toggleCalloutPanelCollapsed();
  if(action==="center")centerSelectedCallout();
  if(action==="resetSelected")resetSelectedCallout();
  if(action==="front")bringSelectedCalloutForward(true);
@@ -465,6 +484,61 @@ function handleEditorAction(event){
  if(action==="exportCurrent")exportCalloutLayout(false);
  if(action==="exportAll")exportCalloutLayout(true);
  if(action==="import")importCalloutLayout();
+}
+
+function toggleCalloutPanelCollapsed(){
+ calloutPanelCollapsed=!calloutPanelCollapsed;
+ syncCalloutEditorPanel();
+}
+
+function startCalloutPanelDrag(event){
+ if(!CALLOUT_LAYOUT_EDITOR||!calloutEditorMobileViewport())return;
+ if(event.target.closest("button,select"))return;
+ const panel=document.getElementById("calloutLayoutEditorPanel");
+ if(!panel)return;
+ event.preventDefault();
+ event.stopPropagation();
+ const rect=panel.getBoundingClientRect();
+ calloutPanelDragState={
+  pointerId:event.pointerId,
+  startClientX:event.clientX,
+  startClientY:event.clientY,
+  startLeft:rect.left,
+  startTop:rect.top,
+  panel,
+  handle:event.currentTarget
+ };
+ safeSetPointerCapture(event.currentTarget,event.pointerId);
+ document.body.classList.add("callout-layout-dragging");
+ document.addEventListener("pointermove",moveCalloutPanelDrag);
+ document.addEventListener("pointerup",endCalloutPanelDrag);
+ document.addEventListener("pointercancel",endCalloutPanelDrag);
+}
+
+function moveCalloutPanelDrag(event){
+ if(!calloutPanelDragState||event.pointerId!==calloutPanelDragState.pointerId)return;
+ event.preventDefault();
+ const {panel,startClientX,startClientY,startLeft,startTop}=calloutPanelDragState;
+ const rect=panel.getBoundingClientRect();
+ const margin=8;
+ const maxLeft=Math.max(margin,window.innerWidth-rect.width-margin);
+ const maxTop=Math.max(margin,window.innerHeight-rect.height-margin);
+ const nextLeft=clamp(startLeft+(event.clientX-startClientX),margin,maxLeft);
+ const nextTop=clamp(startTop+(event.clientY-startClientY),margin,maxTop);
+ panel.style.left=`${Math.round(nextLeft)}px`;
+ panel.style.top=`${Math.round(nextTop)}px`;
+ panel.style.right="auto";
+ panel.style.bottom="auto";
+}
+
+function endCalloutPanelDrag(event){
+ if(!calloutPanelDragState||event.pointerId!==calloutPanelDragState.pointerId)return;
+ safeReleasePointerCapture(calloutPanelDragState.handle,event.pointerId);
+ document.removeEventListener("pointermove",moveCalloutPanelDrag);
+ document.removeEventListener("pointerup",endCalloutPanelDrag);
+ document.removeEventListener("pointercancel",endCalloutPanelDrag);
+ calloutPanelDragState=null;
+ document.body.classList.remove("callout-layout-dragging");
 }
 
 function adjustSelectedCallout(property,direction){
