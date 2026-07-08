@@ -1497,8 +1497,168 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
  display:none;
 }
 
-.mobile-callout-export{
+.callout-layout-editor-panel{
  display:none;
+}
+
+body.callout-layout-editor-active .callout-layout-editor-panel{
+ position:fixed;
+ top:max(10px,env(safe-area-inset-top));
+ right:max(10px,env(safe-area-inset-right));
+ z-index:240;
+ display:block;
+ width:min(280px,calc(100vw - 20px));
+ max-height:calc(100svh - 20px);
+ overflow:auto;
+ padding:10px;
+ border:1px solid rgba(103,248,220,.38);
+ border-radius:10px;
+ background:rgba(4,9,15,.94);
+ color:#d9fff0;
+ box-shadow:0 18px 42px rgba(0,0,0,.4);
+ backdrop-filter:blur(12px);
+}
+
+body.callout-layout-editor-active .callout-layout-title{
+ margin-bottom:8px;
+ font-size:12px;
+ font-weight:1000;
+ letter-spacing:1.4px;
+ text-transform:uppercase;
+}
+
+body.callout-layout-editor-active .callout-layout-editor-panel label,
+body.callout-layout-editor-active .callout-layout-selected-label{
+ display:block;
+ margin-bottom:8px;
+ color:#a7f3c8;
+ font-size:10px;
+ font-weight:900;
+ letter-spacing:.6px;
+ text-transform:uppercase;
+}
+
+body.callout-layout-editor-active .callout-layout-editor-panel select{
+ width:100%;
+ margin-top:4px;
+ height:30px;
+ border-radius:7px;
+ border:1px solid rgba(103,248,220,.3);
+ background:#071b2e;
+ color:#d9fff0;
+ font-weight:900;
+}
+
+body.callout-layout-editor-active .callout-layout-actions{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:6px;
+}
+
+body.callout-layout-editor-active .callout-layout-actions button{
+ min-height:30px;
+ border-radius:8px;
+ border:1px solid rgba(103,248,220,.22);
+ background:#071b2e;
+ color:#a7f3c8;
+ font-size:9px;
+ font-weight:1000;
+ letter-spacing:.3px;
+}
+
+body.callout-layout-editor-active #traitCardLayer .trait-card{
+ cursor:grab;
+ outline:2px dashed rgba(103,248,220,.7);
+ outline-offset:2px;
+ touch-action:none;
+ user-select:none;
+}
+
+body.callout-layout-editor-active #traitCardLayer .trait-card.callout-layout-selected{
+ outline-color:#fbbf24;
+ box-shadow:0 0 0 2px rgba(251,191,36,.38),0 12px 28px rgba(0,0,0,.36);
+}
+
+body.callout-layout-editor-active #traitCardLayer .trait-card:after{
+ content:attr(data-callout-label);
+ position:absolute;
+ left:4px;
+ top:-18px;
+ padding:2px 5px;
+ border-radius:5px;
+ background:#67f8dc;
+ color:#061018;
+ font-size:9px;
+ font-weight:1000;
+ letter-spacing:.4px;
+ text-transform:uppercase;
+ pointer-events:none;
+}
+
+body.callout-layout-editor-active .callout-resize-handle{
+ position:absolute;
+ right:0;
+ bottom:0;
+ width:18px;
+ height:18px;
+ min-width:18px;
+ min-height:18px;
+ padding:0;
+ border:0;
+ border-radius:6px 0 7px 0;
+ background:#fbbf24;
+ cursor:nwse-resize;
+ touch-action:none;
+}
+
+body.callout-layout-editor-active .callout-resize-handle:before{
+ content:"";
+ position:absolute;
+ right:4px;
+ bottom:4px;
+ width:8px;
+ height:8px;
+ border-right:2px solid #061018;
+ border-bottom:2px solid #061018;
+}
+
+body.callout-layout-editor-active .callout-layout-node-layer{
+ position:absolute;
+ inset:0;
+ z-index:90;
+ pointer-events:none;
+}
+
+body.callout-layout-editor-active .callout-layout-node{
+ position:absolute;
+ width:22px;
+ height:22px;
+ min-width:22px;
+ min-height:22px;
+ padding:0;
+ border-radius:999px;
+ border:2px solid #061018;
+ background:#67f8dc;
+ box-shadow:0 0 0 2px rgba(103,248,220,.45),0 8px 14px rgba(0,0,0,.35);
+ transform:translate(-50%,-50%);
+ pointer-events:auto;
+ touch-action:none;
+}
+
+body.callout-layout-editor-active .callout-layout-node.selected{
+ background:#fbbf24;
+ box-shadow:0 0 0 3px rgba(251,191,36,.42),0 8px 14px rgba(0,0,0,.35);
+}
+
+body.callout-layout-dragging,
+body.callout-layout-dragging *{
+ user-select:none!important;
+ -webkit-user-select:none!important;
+}
+
+body.callout-layout-dragging{
+ overflow:hidden;
+ touch-action:none;
 }
 
 @media(max-width:768px){
@@ -1688,106 +1848,7 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
   --mobile-build-callout-top-rebounding:276px;
   --mobile-build-callout-top-defense:342px;
 
-  /*
-   Per-callout mobile placement.
-   x is an offset: positive moves right, negative moves left.
-   y is an offset: positive moves down, negative moves up.
-   scale controls card size without changing anchors or renderer layout.
-   z controls stacking only when cards overlap.
-  */
-  --mobile-callout-left-base-x:var(--mobile-build-left-callout-x);
-  --mobile-callout-right-base-x:var(--mobile-build-right-callout-x);
-
-  --mobile-callout-basketballIQ-base-y:110px;
-  --mobile-callout-basketballIQ-x:0px;
-  --mobile-callout-basketballIQ-y:0px;
-  --mobile-callout-basketballIQ-width:var(--mobile-build-callout-width);
-  --mobile-callout-basketballIQ-height:var(--mobile-build-callout-height);
-  --mobile-callout-basketballIQ-scale:1;
-  --mobile-callout-basketballIQ-z:20;
-  --mobile-callout-basketballIQ-node-x:0px;
-  --mobile-callout-basketballIQ-node-y:0px;
-
-  --mobile-callout-shooting-base-y:176px;
-  --mobile-callout-shooting-x:0px;
-  --mobile-callout-shooting-y:0px;
-  --mobile-callout-shooting-width:var(--mobile-build-callout-width);
-  --mobile-callout-shooting-height:var(--mobile-build-callout-height);
-  --mobile-callout-shooting-scale:1;
-  --mobile-callout-shooting-z:20;
-  --mobile-callout-shooting-node-x:0px;
-  --mobile-callout-shooting-node-y:0px;
-
-  --mobile-callout-handle-base-y:242px;
-  --mobile-callout-handle-x:0px;
-  --mobile-callout-handle-y:0px;
-  --mobile-callout-handle-width:var(--mobile-build-callout-width);
-  --mobile-callout-handle-height:var(--mobile-build-callout-height);
-  --mobile-callout-handle-scale:1;
-  --mobile-callout-handle-z:20;
-  --mobile-callout-handle-node-x:0px;
-  --mobile-callout-handle-node-y:0px;
-
-  --mobile-callout-athleticism-base-y:308px;
-  --mobile-callout-athleticism-x:0px;
-  --mobile-callout-athleticism-y:0px;
-  --mobile-callout-athleticism-width:var(--mobile-build-callout-width);
-  --mobile-callout-athleticism-height:var(--mobile-build-callout-height);
-  --mobile-callout-athleticism-scale:1;
-  --mobile-callout-athleticism-z:20;
-  --mobile-callout-athleticism-node-x:0px;
-  --mobile-callout-athleticism-node-y:0px;
-
-  --mobile-callout-size-base-y:374px;
-  --mobile-callout-size-x:0px;
-  --mobile-callout-size-y:0px;
-  --mobile-callout-size-width:var(--mobile-build-callout-width);
-  --mobile-callout-size-height:var(--mobile-build-callout-height);
-  --mobile-callout-size-scale:1;
-  --mobile-callout-size-z:20;
-  --mobile-callout-size-node-x:0px;
-  --mobile-callout-size-node-y:0px;
-
-  --mobile-callout-clutch-base-y:144px;
-  --mobile-callout-clutch-x:0px;
-  --mobile-callout-clutch-y:0px;
-  --mobile-callout-clutch-width:var(--mobile-build-callout-width);
-  --mobile-callout-clutch-height:var(--mobile-build-callout-height);
-  --mobile-callout-clutch-scale:1;
-  --mobile-callout-clutch-z:20;
-  --mobile-callout-clutch-node-x:0px;
-  --mobile-callout-clutch-node-y:0px;
-
-  --mobile-callout-leadership-base-y:210px;
-  --mobile-callout-leadership-x:0px;
-  --mobile-callout-leadership-y:0px;
-  --mobile-callout-leadership-width:var(--mobile-build-callout-width);
-  --mobile-callout-leadership-height:var(--mobile-build-callout-height);
-  --mobile-callout-leadership-scale:1;
-  --mobile-callout-leadership-z:20;
-  --mobile-callout-leadership-node-x:0px;
-  --mobile-callout-leadership-node-y:0px;
-
-  --mobile-callout-rebounding-base-y:276px;
-  --mobile-callout-rebounding-x:0px;
-  --mobile-callout-rebounding-y:0px;
-  --mobile-callout-rebounding-width:var(--mobile-build-callout-width);
-  --mobile-callout-rebounding-height:var(--mobile-build-callout-height);
-  --mobile-callout-rebounding-scale:1;
-  --mobile-callout-rebounding-z:20;
-  --mobile-callout-rebounding-node-x:0px;
-  --mobile-callout-rebounding-node-y:0px;
-
-  --mobile-callout-defense-base-y:342px;
-  --mobile-callout-defense-x:0px;
-  --mobile-callout-defense-y:0px;
-  --mobile-callout-defense-width:var(--mobile-build-callout-width);
-  --mobile-callout-defense-height:var(--mobile-build-callout-height);
-  --mobile-callout-defense-scale:1;
-  --mobile-callout-defense-z:20;
-  --mobile-callout-defense-node-x:0px;
-  --mobile-callout-defense-node-y:0px;
- }
+}
 
  .app.mobile-tabs-suppressed{
   padding-bottom:0;
@@ -1907,145 +1968,7 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
   line-height:1.08;
  }
 
- .app.mobile-tab-build #traitCardLayer .tc-iq{left:calc(var(--mobile-callout-left-base-x) + var(--mobile-callout-basketballIQ-x))!important;right:auto!important;top:calc(var(--mobile-callout-basketballIQ-base-y) + var(--mobile-callout-basketballIQ-y))!important;width:var(--mobile-callout-basketballIQ-width)!important;max-width:var(--mobile-callout-basketballIQ-width)!important;height:var(--mobile-callout-basketballIQ-height)!important;min-height:var(--mobile-callout-basketballIQ-height)!important;transform:scale(var(--mobile-callout-basketballIQ-scale));transform-origin:left top;z-index:var(--mobile-callout-basketballIQ-z)!important}
- .app.mobile-tab-build #traitCardLayer .tc-shooting{left:calc(var(--mobile-callout-left-base-x) + var(--mobile-callout-shooting-x))!important;right:auto!important;top:calc(var(--mobile-callout-shooting-base-y) + var(--mobile-callout-shooting-y))!important;width:var(--mobile-callout-shooting-width)!important;max-width:var(--mobile-callout-shooting-width)!important;height:var(--mobile-callout-shooting-height)!important;min-height:var(--mobile-callout-shooting-height)!important;transform:scale(var(--mobile-callout-shooting-scale));transform-origin:left top;z-index:var(--mobile-callout-shooting-z)!important}
- .app.mobile-tab-build #traitCardLayer .tc-handling{left:calc(var(--mobile-callout-left-base-x) + var(--mobile-callout-handle-x))!important;right:auto!important;top:calc(var(--mobile-callout-handle-base-y) + var(--mobile-callout-handle-y))!important;width:var(--mobile-callout-handle-width)!important;max-width:var(--mobile-callout-handle-width)!important;height:var(--mobile-callout-handle-height)!important;min-height:var(--mobile-callout-handle-height)!important;transform:scale(var(--mobile-callout-handle-scale));transform-origin:left top;z-index:var(--mobile-callout-handle-z)!important}
- .app.mobile-tab-build #traitCardLayer .tc-speed{left:calc(var(--mobile-callout-left-base-x) + var(--mobile-callout-athleticism-x))!important;right:auto!important;top:calc(var(--mobile-callout-athleticism-base-y) + var(--mobile-callout-athleticism-y))!important;width:var(--mobile-callout-athleticism-width)!important;max-width:var(--mobile-callout-athleticism-width)!important;height:var(--mobile-callout-athleticism-height)!important;min-height:var(--mobile-callout-athleticism-height)!important;transform:scale(var(--mobile-callout-athleticism-scale));transform-origin:left top;z-index:var(--mobile-callout-athleticism-z)!important}
- .app.mobile-tab-build #traitCardLayer .tc-size{left:calc(var(--mobile-callout-left-base-x) + var(--mobile-callout-size-x))!important;right:auto!important;top:calc(var(--mobile-callout-size-base-y) + var(--mobile-callout-size-y))!important;width:var(--mobile-callout-size-width)!important;max-width:var(--mobile-callout-size-width)!important;height:var(--mobile-callout-size-height)!important;min-height:var(--mobile-callout-size-height)!important;transform:scale(var(--mobile-callout-size-scale));transform-origin:left top;z-index:var(--mobile-callout-size-z)!important}
- .app.mobile-tab-build #traitCardLayer .tc-clutch{left:calc(100% - var(--mobile-callout-clutch-width) - var(--mobile-callout-right-base-x) + var(--mobile-callout-clutch-x))!important;right:auto!important;top:calc(var(--mobile-callout-clutch-base-y) + var(--mobile-callout-clutch-y))!important;width:var(--mobile-callout-clutch-width)!important;max-width:var(--mobile-callout-clutch-width)!important;height:var(--mobile-callout-clutch-height)!important;min-height:var(--mobile-callout-clutch-height)!important;transform:scale(var(--mobile-callout-clutch-scale));transform-origin:right top;z-index:var(--mobile-callout-clutch-z)!important}
- .app.mobile-tab-build #traitCardLayer .tc-leadership{left:calc(100% - var(--mobile-callout-leadership-width) - var(--mobile-callout-right-base-x) + var(--mobile-callout-leadership-x))!important;right:auto!important;top:calc(var(--mobile-callout-leadership-base-y) + var(--mobile-callout-leadership-y))!important;width:var(--mobile-callout-leadership-width)!important;max-width:var(--mobile-callout-leadership-width)!important;height:var(--mobile-callout-leadership-height)!important;min-height:var(--mobile-callout-leadership-height)!important;transform:scale(var(--mobile-callout-leadership-scale));transform-origin:right top;z-index:var(--mobile-callout-leadership-z)!important}
- .app.mobile-tab-build #traitCardLayer .tc-rebounding{left:calc(100% - var(--mobile-callout-rebounding-width) - var(--mobile-callout-right-base-x) + var(--mobile-callout-rebounding-x))!important;right:auto!important;top:calc(var(--mobile-callout-rebounding-base-y) + var(--mobile-callout-rebounding-y))!important;width:var(--mobile-callout-rebounding-width)!important;max-width:var(--mobile-callout-rebounding-width)!important;height:var(--mobile-callout-rebounding-height)!important;min-height:var(--mobile-callout-rebounding-height)!important;transform:scale(var(--mobile-callout-rebounding-scale));transform-origin:right top;z-index:var(--mobile-callout-rebounding-z)!important}
- .app.mobile-tab-build #traitCardLayer .tc-defense{left:calc(100% - var(--mobile-callout-defense-width) - var(--mobile-callout-right-base-x) + var(--mobile-callout-defense-x))!important;right:auto!important;top:calc(var(--mobile-callout-defense-base-y) + var(--mobile-callout-defense-y))!important;width:var(--mobile-callout-defense-width)!important;max-width:var(--mobile-callout-defense-width)!important;height:var(--mobile-callout-defense-height)!important;min-height:var(--mobile-callout-defense-height)!important;transform:scale(var(--mobile-callout-defense-scale));transform-origin:right top;z-index:var(--mobile-callout-defense-z)!important}
-
- body.mobile-callout-debug .app.mobile-tab-build #traitCardLayer .trait-card{
-  outline:2px dashed #67f8dc;
-  outline-offset:2px;
-  cursor:grab;
-  touch-action:none;
-  user-select:none;
- }
-
- body.mobile-callout-debug .app.mobile-tab-build #traitCardLayer .trait-card.mobile-callout-selected{
-  outline-color:#fbbf24;
-  box-shadow:0 0 0 2px rgba(251,191,36,.4),0 12px 26px rgba(0,0,0,.34);
- }
-
- body.mobile-callout-debug .app.mobile-tab-build #traitCardLayer .trait-card:after{
-  content:attr(data-mobile-callout-label);
-  position:absolute;
-  left:4px;
-  top:-18px;
-  padding:2px 5px;
-  border-radius:5px;
-  background:#67f8dc;
-  color:#061018;
-  font-size:9px;
-  font-weight:1000;
-  letter-spacing:.4px;
-  text-transform:uppercase;
-  pointer-events:none;
- }
-
- body.mobile-callout-debug .mobile-callout-export{
-  display:block;
-  position:fixed;
-  right:max(12px,env(safe-area-inset-right));
-  top:calc(12px + env(safe-area-inset-top));
-  z-index:150;
-  height:38px;
-  padding:0 14px;
-  border-radius:999px;
-  border:1px solid rgba(103,248,220,.7);
-  background:#071b2e;
-  color:#d9fff0;
-  font-size:11px;
-  font-weight:1000;
-  letter-spacing:.8px;
-  text-transform:uppercase;
-  box-shadow:0 10px 24px rgba(0,0,0,.32);
- }
-
- body.mobile-callout-debug .mobile-callout-editor{
-  position:fixed;
-  left:max(12px,env(safe-area-inset-left));
-  right:max(12px,env(safe-area-inset-right));
-  bottom:calc(104px + env(safe-area-inset-bottom));
-  z-index:151;
-  padding:8px;
-  border:1px solid rgba(103,248,220,.34);
-  border-radius:14px;
-  background:rgba(4,9,15,.94);
-  box-shadow:0 16px 36px rgba(0,0,0,.38);
-  backdrop-filter:blur(12px);
- }
-
- body.mobile-callout-debug .mobile-callout-editor-title{
-  margin-bottom:6px;
-  color:#d9fff0;
-  font-size:10px;
-  font-weight:1000;
-  letter-spacing:1px;
-  text-transform:uppercase;
-  text-align:center;
- }
-
- body.mobile-callout-debug .mobile-callout-editor-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:5px;
- }
-
- body.mobile-callout-debug .mobile-callout-editor button{
-  min-height:28px;
-  border-radius:8px;
-  border:1px solid rgba(103,248,220,.24);
-  background:#071b2e;
-  color:#a7f3c8;
-  font-size:9px;
-  font-weight:1000;
-  letter-spacing:.3px;
- }
-
- body.mobile-callout-debug .app.mobile-tab-build #mobileCalloutNodeLayer{
-  position:absolute;
-  inset:0;
-  z-index:60;
-  pointer-events:none;
- }
-
- body.mobile-callout-debug .app.mobile-tab-build .mobile-callout-node{
-  position:absolute;
-  width:22px;
-  height:22px;
-  min-width:22px;
-  min-height:22px;
-  padding:0;
-  border-radius:999px;
-  border:2px solid #061018;
-  background:#67f8dc;
-  box-shadow:0 0 0 2px rgba(103,248,220,.45),0 8px 14px rgba(0,0,0,.35);
-  transform:translate(-50%,-50%);
-  pointer-events:auto;
-  touch-action:none;
- }
-
- body.mobile-callout-debug .app.mobile-tab-build .mobile-callout-node.selected{
-  background:#fbbf24;
-  box-shadow:0 0 0 3px rgba(251,191,36,.42),0 8px 14px rgba(0,0,0,.35);
- }
-
- body.mobile-callout-dragging,
- body.mobile-callout-dragging *{
-  user-select:none!important;
-  -webkit-user-select:none!important;
- }
-
- body.mobile-callout-dragging{
-  overflow:hidden;
-  touch-action:none;
- }
-
- .app.mobile-tab-build .side.complete .ovr-card{order:0}
+.app.mobile-tab-build .side.complete .ovr-card{order:0}
  .app.mobile-tab-build .side.complete .build-name{order:1}
  .app.mobile-tab-build .side.complete .share-build{
   order:2;
@@ -2072,6 +1995,310 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
 @media(max-width:430px){
  .wheel{
   height:210px;
+ }
+}
+
+@media(orientation:landscape) and (max-height:520px){
+ html,body{
+  overflow-x:hidden;
+ }
+
+ .app{
+  min-height:100svh;
+  padding-bottom:calc(66px + env(safe-area-inset-bottom));
+ }
+
+ .layout{
+  width:100%;
+  max-width:100%;
+  min-height:0;
+  padding:8px max(8px,env(safe-area-inset-right)) calc(72px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));
+  gap:8px;
+  overflow-x:hidden;
+ }
+
+ .mobile-tab-nav{
+  position:fixed;
+  left:max(10px,env(safe-area-inset-left));
+  right:max(10px,env(safe-area-inset-right));
+  bottom:calc(8px + env(safe-area-inset-bottom));
+  z-index:95;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  padding:6px;
+  border:1px solid rgba(158,230,191,.18);
+  border-radius:16px;
+  background:rgba(4,9,15,.9);
+  box-shadow:0 12px 34px rgba(0,0,0,.36);
+  backdrop-filter:blur(12px);
+ }
+
+ .mobile-tab-button{
+  position:relative;
+  height:44px;
+  min-height:44px;
+  border-radius:12px;
+  border:1px solid rgba(103,248,220,.2);
+  background:rgba(255,255,255,.035);
+  color:#82d9b2;
+  font-size:11px;
+  font-weight:1000;
+  letter-spacing:2px;
+  text-transform:uppercase;
+ }
+
+ #mobileBuildTab:after{
+  content:attr(data-progress);
+  position:absolute;
+  top:5px;
+  right:8px;
+  min-width:26px;
+  padding:2px 5px;
+  border-radius:999px;
+  background:#a7f3c8;
+  color:#061018;
+  font-size:9px;
+  line-height:1.1;
+  font-weight:1000;
+  letter-spacing:.2px;
+ }
+
+ .mobile-tab-button.active{
+  border-color:rgba(158,230,191,.56);
+  background:linear-gradient(90deg,rgba(45,212,191,.26),rgba(103,248,220,.12));
+  color:#d9fff0;
+ }
+
+ .app.mobile-tab-spin .stage,
+ .app.mobile-tab-spin .side{
+  display:none;
+ }
+
+ .app.mobile-tab-spin .left{
+  display:flex;
+ }
+
+ .app.mobile-tab-build .left{
+  display:none;
+ }
+
+ .app.mobile-tab-build .stage{
+  display:flex;
+ }
+
+ .app.mobile-tab-build .side{
+  display:flex;
+ }
+
+ .app.mobile-tab-build .layout{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 176px;
+  align-items:start;
+ }
+
+ .app.mobile-tab-build .stage{
+  width:100%;
+  max-width:none;
+  height:calc(100svh - 116px);
+  min-height:250px;
+  max-height:calc(100svh - 116px);
+  padding:6px 0 0;
+  overflow:hidden;
+  border-radius:14px;
+ }
+
+ .app.mobile-tab-build .tabs{
+  position:relative;
+  top:auto;
+  left:auto;
+  transform:none;
+  order:0;
+  width:100%;
+  justify-content:center;
+  gap:5px;
+  padding:0 8px;
+  margin:0 auto 5px;
+ }
+
+ .app.mobile-tab-build .tab{
+  flex:1 1 0;
+  min-width:0;
+  height:30px;
+  padding:0 8px;
+  font-size:9px;
+  letter-spacing:1.3px;
+  border-radius:6px;
+ }
+
+ .app.mobile-tab-build .bio{
+  position:relative;
+  top:auto;
+  left:auto;
+  order:1;
+  width:190px;
+  margin:0 auto 4px;
+  border-radius:7px;
+ }
+
+ .app.mobile-tab-build .bio div{
+  padding:7px 16px;
+ }
+
+ .app.mobile-tab-build .bio b{
+  font-size:9px;
+ }
+
+ .app.mobile-tab-build .bio span{
+  font-size:15px;
+ }
+
+ .app.mobile-tab-build .player-wrap{
+  position:relative;
+  inset:auto;
+  order:2;
+  width:100%;
+  height:calc(100svh - 156px);
+  min-height:188px;
+  max-height:220px;
+  margin:0 auto;
+ }
+
+ .app.mobile-tab-build #traitCardLayer{
+  position:absolute!important;
+  inset:0!important;
+  display:block!important;
+  width:auto!important;
+  max-width:none!important;
+  margin:0!important;
+  padding:0!important;
+  z-index:20;
+  pointer-events:auto;
+ }
+
+ .app.mobile-tab-build .callouts{
+  display:block!important;
+ }
+
+ /*
+  Mobile landscape callout tuning section.
+  These values are independent from portrait tuning and only apply to
+  short landscape phone viewports.
+ */
+ .app.mobile-tab-build{
+  --mobile-build-callout-width:92px;
+  --mobile-build-callout-height:42px;
+  --mobile-build-callout-header-height:16px;
+  --mobile-build-callout-body-height:26px;
+  --mobile-build-callout-font-size:7px;
+  --mobile-build-callout-rating-size:12px;
+  --mobile-build-callout-meta-size:7px;
+  --mobile-build-callout-player-image-size:20px;
+ --mobile-build-left-callout-x:6px;
+ --mobile-build-right-callout-x:6px;
+}
+
+.app.mobile-tab-build #traitCardLayer .trait-card{
+  position:absolute!important;
+  width:var(--mobile-build-callout-width)!important;
+  max-width:var(--mobile-build-callout-width)!important;
+  height:var(--mobile-build-callout-height)!important;
+  min-height:var(--mobile-build-callout-height)!important;
+  margin:0!important;
+  border-radius:7px;
+ }
+
+ .app.mobile-tab-build #traitCardLayer .trait-card .head{
+  min-height:var(--mobile-build-callout-header-height);
+  height:var(--mobile-build-callout-header-height);
+  padding:4px 6px;
+  font-size:var(--mobile-build-callout-font-size);
+  line-height:1;
+ }
+
+ .app.mobile-tab-build #traitCardLayer .trait-card .body{
+  height:var(--mobile-build-callout-body-height);
+  min-height:var(--mobile-build-callout-body-height);
+  padding:4px 6px;
+  font-size:var(--mobile-build-callout-font-size);
+ }
+
+ .app.mobile-tab-build #traitCardLayer .trait-photo{
+  width:var(--mobile-build-callout-player-image-size);
+  height:var(--mobile-build-callout-player-image-size);
+ }
+
+ .app.mobile-tab-build #traitCardLayer .rating{
+  font-size:var(--mobile-build-callout-rating-size);
+ }
+
+ .app.mobile-tab-build #traitCardLayer .from{
+  font-size:var(--mobile-build-callout-meta-size);
+  line-height:1;
+ }
+
+ .app.mobile-tab-build .side{
+  width:176px;
+  max-width:176px;
+  min-height:0;
+  max-height:calc(100svh - 116px);
+  padding:8px;
+  overflow-y:auto;
+  border-radius:14px;
+ }
+
+ .app.mobile-tab-build .ovr-card{
+  width:74px;
+  height:74px;
+  margin:0 auto 6px;
+ }
+
+ .app.mobile-tab-build .ovr-card:before{
+  width:64px;
+  height:64px;
+ }
+
+ .app.mobile-tab-build .ovr-card:after{
+  width:52px;
+  height:52px;
+ }
+
+ .app.mobile-tab-build .ovr{
+  font-size:25px;
+ }
+
+ .app.mobile-tab-build .build-name{
+  font-size:12px;
+  line-height:1.1;
+  margin-bottom:6px;
+ }
+
+ .app.mobile-tab-build .share-build,
+ .app.mobile-tab-build #nextBtn{
+  position:static;
+  width:100%;
+  height:36px;
+  margin:0 0 6px;
+  border-radius:10px;
+  font-size:10px;
+ }
+
+ .app.mobile-tab-build .respins{
+  padding:8px;
+  margin-bottom:6px;
+  font-size:9px;
+ }
+
+ .app.mobile-tab-build .list{
+  max-height:120px;
+  overflow:auto;
+ }
+
+ .app.mobile-tab-build .overview-item,
+ .app.mobile-tab-build .li{
+  min-height:36px;
+  padding:6px;
+  font-size:9px;
  }
 }
 

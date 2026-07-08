@@ -177,6 +177,7 @@ function buildList(){
   }
 
   traitLayer.innerHTML=traitCards();
+  window.applyCalloutLayout?.();
 
   const renderTeamId=selectedBuildTeamId();
   renderPlayer({
@@ -205,7 +206,7 @@ function drawAnchoredCallouts(layer){
  const complete=stage?.classList.contains("complete");
  const keys=complete?Object.keys(anchors):(TAB_TRAITS[activeStageTab]||TAB_TRAITS.physical);
  const endpointFor=(key,a)=>{
-  const offset=window.mobileCalloutNodeOffset?.(key)||{x:0,y:0};
+  const offset=window.calloutLayoutNodeOffset?.(key)||{x:0,y:0};
   const x=playerBox?((playerBox.left-lr.left)+(a[0]*playerBox.width)):(a[0]*w);
   const y=playerBox?((playerBox.top-lr.top)+(a[1]*playerBox.height)):(a[1]*h);
   return [x+(offset.x||0),y+(offset.y||0)];
@@ -227,15 +228,16 @@ function drawAnchoredCallouts(layer){
   return `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="5.5"></circle>`;
  };
  const seen=[];
- const hasMobileNodeOffsets=typeof window.mobileCalloutNodeOffset==="function"
+ const offsetFor=(key)=>window.calloutLayoutNodeOffset?.(key)||{x:0,y:0};
+ const hasNodeOffsets=typeof window.calloutLayoutNodeOffset==="function"
   &&keys.some(k=>{
-   const offset=window.mobileCalloutNodeOffset(k);
+   const offset=offsetFor(k);
    return !!(offset?.x||offset?.y);
   });
  keys.forEach(k=>{
   const p=anchors[k];
   if(!p)return;
-  if(hasMobileNodeOffsets){
+  if(hasNodeOffsets){
    seen.push([k,p]);
   }else if(!seen.some(([,q])=>Math.abs(q[0]-p[0])<.001&&Math.abs(q[1]-p[1])<.001)){
    seen.push([k,p]);
@@ -249,7 +251,9 @@ function drawAnchoredCallouts(layer){
 function drawCallouts(){
  const layer=document.getElementById("callouts");
  if(!layer)return;
+ window.applyCalloutLayout?.();
  drawAnchoredCallouts(layer);
+ window.syncCalloutEditorNodeLayer?.();
  if(!window.isAnchorDragging)renderAnchorEditor?.();
 }
 
