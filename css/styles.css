@@ -1634,4 +1634,164 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
  }
 }
 
+@media(max-width:768px){
+ .app.mobile-tabs-suppressed{
+  padding-bottom:0;
+ }
+
+ .app.mobile-tabs-suppressed .layout{
+  padding-bottom:12px;
+ }
+
+ .app.mobile-tabs-suppressed .mobile-tab-nav{
+  display:none!important;
+ }
+
+ .wheel-row{
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  align-items:start;
+ }
+
+ .wheel{
+  height:220px;
+ }
+
+ .selector{
+  top:50%;
+  height:44px;
+  transform:translateY(-50%);
+ }
+
+ .item{
+  height:44px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  line-height:1.02;
+ }
+
+ .respin-control:disabled{
+  display:none;
+ }
+
+ .app.mobile-tab-spin .left{
+  display:flex;
+ }
+
+ .app.mobile-tab-spin .stage,
+ .app.mobile-tab-spin .side{
+  display:none;
+ }
+
+ .app.mobile-tab-build .left{
+  display:none;
+ }
+
+ .app.mobile-tab-build .stage,
+ .app.mobile-tab-build .side{
+  display:flex;
+ }
+
+ .app.mobile-tab-build #traitCardLayer{
+  position:absolute!important;
+  inset:0!important;
+  display:block!important;
+  width:auto!important;
+  max-width:none!important;
+  margin:0!important;
+  padding:0!important;
+  z-index:20;
+  pointer-events:auto;
+ }
+
+ .app.mobile-tab-build #traitCardLayer .trait-card{
+  position:absolute!important;
+  width:122px!important;
+  max-width:122px!important;
+  min-height:56px!important;
+  margin:0!important;
+  border-radius:9px;
+  box-shadow:0 10px 22px rgba(0,0,0,.26);
+ }
+
+ .app.mobile-tab-build #traitCardLayer .trait-card .head{
+  min-height:24px;
+  height:auto;
+  padding:6px 8px;
+  font-size:9px;
+  line-height:1;
+  letter-spacing:.9px;
+ }
+
+ .app.mobile-tab-build #traitCardLayer .trait-card .body{
+  min-height:32px;
+  padding:6px 8px;
+  font-size:10px;
+ }
+
+ .app.mobile-tab-build #traitCardLayer .trait-card.filled .body{
+  grid-template-columns:28px minmax(0,1fr);
+  gap:6px;
+ }
+
+ .app.mobile-tab-build #traitCardLayer .trait-photo{
+  width:28px;
+  height:28px;
+ }
+
+ .app.mobile-tab-build #traitCardLayer .rating{
+  font-size:15px;
+  line-height:1;
+ }
+
+ .app.mobile-tab-build #traitCardLayer .from{
+  margin-top:3px;
+  font-size:8px;
+  line-height:1.08;
+ }
+
+ .app.mobile-tab-build #traitCardLayer .tc-iq{left:8px!important;top:110px!important}
+ .app.mobile-tab-build #traitCardLayer .tc-shooting{left:8px!important;top:176px!important}
+ .app.mobile-tab-build #traitCardLayer .tc-handling{left:8px!important;top:242px!important}
+ .app.mobile-tab-build #traitCardLayer .tc-speed{left:8px!important;top:308px!important}
+ .app.mobile-tab-build #traitCardLayer .tc-size{left:8px!important;top:374px!important}
+ .app.mobile-tab-build #traitCardLayer .tc-clutch{right:8px!important;top:144px!important}
+ .app.mobile-tab-build #traitCardLayer .tc-leadership{right:8px!important;top:210px!important}
+ .app.mobile-tab-build #traitCardLayer .tc-rebounding{right:8px!important;top:276px!important}
+ .app.mobile-tab-build #traitCardLayer .tc-defense{right:8px!important;top:342px!important}
+}
+
+@media(max-width:430px){
+ .wheel{
+  height:210px;
+ }
+}
+
+@media(max-width:390px){
+ .wheel{
+  height:198px;
+ }
+
+ .app.mobile-tab-build #traitCardLayer .trait-card{
+  width:112px!important;
+  max-width:112px!important;
+ }
+
+ .app.mobile-tab-build #traitCardLayer .tc-iq,
+ .app.mobile-tab-build #traitCardLayer .tc-shooting,
+ .app.mobile-tab-build #traitCardLayer .tc-handling,
+ .app.mobile-tab-build #traitCardLayer .tc-speed,
+ .app.mobile-tab-build #traitCardLayer .tc-size{
+  left:6px!important;
+ }
+
+ .app.mobile-tab-build #traitCardLayer .tc-clutch,
+ .app.mobile-tab-build #traitCardLayer .tc-leadership,
+ .app.mobile-tab-build #traitCardLayer .tc-rebounding,
+ .app.mobile-tab-build #traitCardLayer .tc-defense{
+  right:6px!important;
+ }
+}
+
 
