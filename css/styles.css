@@ -1524,6 +1524,7 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
  }
 
  .mobile-tab-button{
+  position:relative;
   height:58px;
   min-height:58px;
   border-radius:16px;
@@ -1534,6 +1535,27 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
   font-weight:1000;
   letter-spacing:2.4px;
   text-transform:uppercase;
+ }
+
+ .mobile-tab-button:disabled{
+  cursor:wait;
+  opacity:.58;
+ }
+
+ #mobileBuildTab:after{
+  content:attr(data-progress);
+  position:absolute;
+  top:9px;
+  right:11px;
+  min-width:28px;
+  padding:2px 6px;
+  border-radius:999px;
+  background:#a7f3c8;
+  color:#061018;
+  font-size:10px;
+  line-height:1.15;
+  font-weight:1000;
+  letter-spacing:.3px;
  }
 
  .mobile-tab-button.active{
@@ -1635,6 +1657,34 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
 }
 
 @media(max-width:768px){
+ /*
+  Mobile build-callout tuning section.
+  Adjust these variables to manually tune the Build tab callout cards without touching
+  player renderer layout, anchors, connector math, or desktop styles.
+ */
+ .app.mobile-tab-build{
+  --mobile-build-callout-width:112px;
+  --mobile-build-callout-height:56px;
+  --mobile-build-callout-header-height:22px;
+  --mobile-build-callout-body-height:34px;
+  --mobile-build-callout-font-size:9px;
+  --mobile-build-callout-rating-size:15px;
+  --mobile-build-callout-meta-size:8px;
+  --mobile-build-callout-player-image-size:28px;
+  --mobile-build-left-callout-x:8px;
+  --mobile-build-right-callout-x:8px;
+  --mobile-build-card-gap:6px;
+  --mobile-build-callout-top-iq:110px;
+  --mobile-build-callout-top-shooting:176px;
+  --mobile-build-callout-top-handling:242px;
+  --mobile-build-callout-top-speed:308px;
+  --mobile-build-callout-top-size:374px;
+  --mobile-build-callout-top-clutch:144px;
+  --mobile-build-callout-top-leadership:210px;
+  --mobile-build-callout-top-rebounding:276px;
+  --mobile-build-callout-top-defense:342px;
+ }
+
  .app.mobile-tabs-suppressed{
   padding-bottom:0;
  }
@@ -1707,59 +1757,61 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
 
  .app.mobile-tab-build #traitCardLayer .trait-card{
   position:absolute!important;
-  width:122px!important;
-  max-width:122px!important;
-  min-height:56px!important;
+  width:var(--mobile-build-callout-width)!important;
+  max-width:var(--mobile-build-callout-width)!important;
+  height:var(--mobile-build-callout-height)!important;
+  min-height:var(--mobile-build-callout-height)!important;
   margin:0!important;
   border-radius:9px;
   box-shadow:0 10px 22px rgba(0,0,0,.26);
  }
 
  .app.mobile-tab-build #traitCardLayer .trait-card .head{
-  min-height:24px;
-  height:auto;
+  min-height:var(--mobile-build-callout-header-height);
+  height:var(--mobile-build-callout-header-height);
   padding:6px 8px;
-  font-size:9px;
+  font-size:var(--mobile-build-callout-font-size);
   line-height:1;
   letter-spacing:.9px;
  }
 
  .app.mobile-tab-build #traitCardLayer .trait-card .body{
-  min-height:32px;
+  height:var(--mobile-build-callout-body-height);
+  min-height:var(--mobile-build-callout-body-height);
   padding:6px 8px;
-  font-size:10px;
+  font-size:var(--mobile-build-callout-font-size);
  }
 
  .app.mobile-tab-build #traitCardLayer .trait-card.filled .body{
-  grid-template-columns:28px minmax(0,1fr);
+  grid-template-columns:var(--mobile-build-callout-player-image-size) minmax(0,1fr);
   gap:6px;
  }
 
  .app.mobile-tab-build #traitCardLayer .trait-photo{
-  width:28px;
-  height:28px;
+  width:var(--mobile-build-callout-player-image-size);
+  height:var(--mobile-build-callout-player-image-size);
  }
 
  .app.mobile-tab-build #traitCardLayer .rating{
-  font-size:15px;
+  font-size:var(--mobile-build-callout-rating-size);
   line-height:1;
  }
 
  .app.mobile-tab-build #traitCardLayer .from{
   margin-top:3px;
-  font-size:8px;
+  font-size:var(--mobile-build-callout-meta-size);
   line-height:1.08;
  }
 
- .app.mobile-tab-build #traitCardLayer .tc-iq{left:8px!important;top:110px!important}
- .app.mobile-tab-build #traitCardLayer .tc-shooting{left:8px!important;top:176px!important}
- .app.mobile-tab-build #traitCardLayer .tc-handling{left:8px!important;top:242px!important}
- .app.mobile-tab-build #traitCardLayer .tc-speed{left:8px!important;top:308px!important}
- .app.mobile-tab-build #traitCardLayer .tc-size{left:8px!important;top:374px!important}
- .app.mobile-tab-build #traitCardLayer .tc-clutch{right:8px!important;top:144px!important}
- .app.mobile-tab-build #traitCardLayer .tc-leadership{right:8px!important;top:210px!important}
- .app.mobile-tab-build #traitCardLayer .tc-rebounding{right:8px!important;top:276px!important}
- .app.mobile-tab-build #traitCardLayer .tc-defense{right:8px!important;top:342px!important}
+ .app.mobile-tab-build #traitCardLayer .tc-iq{left:var(--mobile-build-left-callout-x)!important;top:var(--mobile-build-callout-top-iq)!important}
+ .app.mobile-tab-build #traitCardLayer .tc-shooting{left:var(--mobile-build-left-callout-x)!important;top:var(--mobile-build-callout-top-shooting)!important}
+ .app.mobile-tab-build #traitCardLayer .tc-handling{left:var(--mobile-build-left-callout-x)!important;top:var(--mobile-build-callout-top-handling)!important}
+ .app.mobile-tab-build #traitCardLayer .tc-speed{left:var(--mobile-build-left-callout-x)!important;top:var(--mobile-build-callout-top-speed)!important}
+ .app.mobile-tab-build #traitCardLayer .tc-size{left:var(--mobile-build-left-callout-x)!important;top:var(--mobile-build-callout-top-size)!important}
+ .app.mobile-tab-build #traitCardLayer .tc-clutch{right:var(--mobile-build-right-callout-x)!important;top:var(--mobile-build-callout-top-clutch)!important}
+ .app.mobile-tab-build #traitCardLayer .tc-leadership{right:var(--mobile-build-right-callout-x)!important;top:var(--mobile-build-callout-top-leadership)!important}
+ .app.mobile-tab-build #traitCardLayer .tc-rebounding{right:var(--mobile-build-right-callout-x)!important;top:var(--mobile-build-callout-top-rebounding)!important}
+ .app.mobile-tab-build #traitCardLayer .tc-defense{right:var(--mobile-build-right-callout-x)!important;top:var(--mobile-build-callout-top-defense)!important}
 }
 
 @media(max-width:430px){
@@ -1773,24 +1825,10 @@ button:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.35)}button.ghost
   height:198px;
  }
 
- .app.mobile-tab-build #traitCardLayer .trait-card{
-  width:112px!important;
-  max-width:112px!important;
- }
-
- .app.mobile-tab-build #traitCardLayer .tc-iq,
- .app.mobile-tab-build #traitCardLayer .tc-shooting,
- .app.mobile-tab-build #traitCardLayer .tc-handling,
- .app.mobile-tab-build #traitCardLayer .tc-speed,
- .app.mobile-tab-build #traitCardLayer .tc-size{
-  left:6px!important;
- }
-
- .app.mobile-tab-build #traitCardLayer .tc-clutch,
- .app.mobile-tab-build #traitCardLayer .tc-leadership,
- .app.mobile-tab-build #traitCardLayer .tc-rebounding,
- .app.mobile-tab-build #traitCardLayer .tc-defense{
-  right:6px!important;
+ .app.mobile-tab-build{
+  --mobile-build-callout-width:106px;
+  --mobile-build-left-callout-x:6px;
+  --mobile-build-right-callout-x:6px;
  }
 }
 

@@ -7,6 +7,7 @@ function setControls(){
  document.getElementById("respinBtn").disabled=isSpinning||!current||!lockedSpinTeam||respinsLeft<=0;
  document.getElementById("respinCount").textContent=`${respinsLeft} LEFT`;
  document.getElementById("spinStatus").textContent=`${respinsLeft} / 5`;
+ if(typeof syncMobileTabControls==="function")syncMobileTabControls();
 }
 function spin(){
  if(isSpinning||current||Object.keys(build).length>=9)return;
@@ -154,6 +155,8 @@ function unlockSim(){
   document.getElementById("nextBtn").disabled=false;
  document.getElementById("nextBtn").textContent="SIMULATE SEASON";
  document.getElementById("nextBtn").onclick=openSeasonMenu;
+ if(typeof syncMobileCompletionTab==="function")syncMobileCompletionTab();
+ if(typeof syncMobileTabControls==="function")syncMobileTabControls();
  toast("Build complete. Simulator unlocked.");
 }
 function previewCompleteBuild(){

@@ -27,6 +27,34 @@ function isMobileBuildViewport(){
  return window.matchMedia?.("(max-width: 768px)")?.matches;
 }
 
+function mobileTabSwitchLocked(){
+ return isMobileBuildViewport()&&typeof isSpinning!=="undefined"&&isSpinning;
+}
+
+function mobileBuildProgressCount(){
+ return typeof build==="object"&&build ? Math.min(Object.keys(build).length,9) : 0;
+}
+
+function syncMobileBuildProgress(){
+ const buildTab=document.getElementById("mobileBuildTab");
+ if(!buildTab)return;
+ buildTab.dataset.progress=`${mobileBuildProgressCount()}/9`;
+}
+
+function syncMobileTabControls(){
+ const spin=document.getElementById("mobileSpinTab");
+ const build=document.getElementById("mobileBuildTab");
+ const locked=mobileTabSwitchLocked();
+
+ [spin,build].forEach(button=>{
+  if(!button)return;
+  button.disabled=locked;
+  button.setAttribute("aria-disabled",locked?"true":"false");
+ });
+
+ syncMobileBuildProgress();
+}
+
 function syncMobileCompletionTab(){
  const stage=document.getElementById("stage");
  if(!stage)return;
@@ -72,6 +100,10 @@ function setMobileViewTab(tab){
  const build=document.getElementById("mobileBuildTab");
  const next=tab==="build"?"build":"spin";
  if(!app)return;
+ if(mobileTabSwitchLocked()&&!app.classList.contains(`mobile-tab-${next}`)){
+  syncMobileTabControls();
+  return;
+ }
 
  app.classList.toggle("mobile-tab-spin",next==="spin");
  app.classList.toggle("mobile-tab-build",next==="build");
@@ -93,10 +125,15 @@ function setMobileViewTab(tab){
  }
 
  syncMobileTabVisibility();
+ syncMobileTabControls();
 }
 
 window.setMobileViewTab=setMobileViewTab;
+window.syncMobileTabControls=syncMobileTabControls;
+window.syncMobileCompletionTab=syncMobileCompletionTab;
 document.addEventListener("DOMContentLoaded",initMobileTabObservers);
 document.addEventListener("DOMContentLoaded",initMobileCompletionObserver);
+document.addEventListener("DOMContentLoaded",syncMobileTabControls);
 requestAnimationFrame(initMobileTabObservers);
 requestAnimationFrame(initMobileCompletionObserver);
+requestAnimationFrame(syncMobileTabControls);
