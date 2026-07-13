@@ -2132,29 +2132,62 @@ body.callout-layout-dragging{
 
  .app{
   min-height:100svh;
-  padding-bottom:calc(66px + env(safe-area-inset-bottom));
+  height:100svh;
+  padding-bottom:calc(56px + env(safe-area-inset-bottom));
+  overflow:hidden;
+ }
+
+ .topbar{
+  height:38px;
+  min-height:38px;
+  padding:4px max(8px,env(safe-area-inset-right)) 4px max(8px,env(safe-area-inset-left));
+ }
+
+ .brand{
+  font-size:20px;
+  line-height:1;
+  white-space:nowrap;
+ }
+
+ .brand small{
+  font-size:9px;
+  letter-spacing:1.5px;
+ }
+
+ .top-actions{
+  gap:6px;
+ }
+
+ .top-actions button{
+  height:30px;
+  min-height:30px;
+  padding:0 12px;
+  border-radius:8px;
+  font-size:10px;
+  line-height:1;
  }
 
  .layout{
   width:100%;
   max-width:100%;
+  height:calc(100svh - 38px);
   min-height:0;
-  padding:8px max(8px,env(safe-area-inset-right)) calc(72px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));
-  gap:8px;
-  overflow-x:hidden;
+  padding:6px max(8px,env(safe-area-inset-right)) calc(60px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));
+  gap:6px;
+  overflow:hidden;
  }
 
  .mobile-tab-nav{
   position:fixed;
   left:max(10px,env(safe-area-inset-left));
   right:max(10px,env(safe-area-inset-right));
-  bottom:calc(8px + env(safe-area-inset-bottom));
+  bottom:calc(6px + env(safe-area-inset-bottom));
   z-index:95;
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:8px;
-  padding:6px;
-  border:1px solid rgba(158,230,191,.18);
+  padding:5px;
+  border:1px solid rgba(158,230,191,.2);
   border-radius:16px;
   background:rgba(4,9,15,.9);
   box-shadow:0 12px 34px rgba(0,0,0,.36);
@@ -2163,13 +2196,13 @@ body.callout-layout-dragging{
 
  .mobile-tab-button{
   position:relative;
-  height:44px;
-  min-height:44px;
+  height:38px;
+  min-height:38px;
   border-radius:12px;
   border:1px solid rgba(103,248,220,.2);
   background:rgba(255,255,255,.035);
   color:#82d9b2;
-  font-size:11px;
+  font-size:10px;
   font-weight:1000;
   letter-spacing:2px;
   text-transform:uppercase;
@@ -2220,75 +2253,84 @@ body.callout-layout-dragging{
 
  .app.mobile-tab-build .layout{
   display:grid;
-  grid-template-columns:minmax(0,1fr) 176px;
+  grid-template-columns:minmax(0,1fr) clamp(118px,17vw,148px);
+  grid-template-rows:minmax(0,1fr);
   align-items:start;
+  column-gap:6px;
+  row-gap:0;
  }
 
  .app.mobile-tab-build .stage{
   width:100%;
   max-width:none;
-  height:calc(100svh - 116px);
-  min-height:250px;
-  max-height:calc(100svh - 116px);
-  padding:6px 0 0;
+  height:calc(100svh - 104px);
+  min-height:236px;
+  max-height:calc(100svh - 104px);
+  padding:0;
   overflow:hidden;
-  border-radius:14px;
+  border-radius:12px;
+  display:block;
  }
 
  .app.mobile-tab-build .tabs{
-  position:relative;
-  top:auto;
-  left:auto;
+  position:absolute;
+  top:6px;
+  left:6px;
   transform:none;
-  order:0;
-  width:100%;
-  justify-content:center;
-  gap:5px;
-  padding:0 8px;
-  margin:0 auto 5px;
+  width:min(276px,calc(100% - 102px));
+  justify-content:flex-start;
+  gap:4px;
+  padding:0;
+  margin:0;
+  z-index:50;
  }
 
  .app.mobile-tab-build .tab{
   flex:1 1 0;
   min-width:0;
-  height:30px;
-  padding:0 8px;
-  font-size:9px;
-  letter-spacing:1.3px;
+  height:27px;
+  min-height:27px;
+  padding:0 7px;
+  font-size:8px;
+  letter-spacing:1.1px;
   border-radius:6px;
  }
 
  .app.mobile-tab-build .bio{
-  position:relative;
-  top:auto;
+  position:absolute;
+  top:6px;
+  right:6px;
   left:auto;
-  order:1;
-  width:190px;
-  margin:0 auto 4px;
+  width:88px;
+  margin:0;
   border-radius:7px;
+  z-index:50;
  }
 
  .app.mobile-tab-build .bio div{
-  padding:7px 16px;
+  padding:4px 6px;
  }
 
  .app.mobile-tab-build .bio b{
-  font-size:9px;
+  font-size:7px;
+  letter-spacing:.8px;
  }
 
  .app.mobile-tab-build .bio span{
-  font-size:15px;
+  font-size:10px;
+  line-height:1.05;
  }
 
  .app.mobile-tab-build .player-wrap{
-  position:relative;
-  inset:auto;
-  order:2;
+  position:absolute;
+  inset:34px 0 4px;
   width:100%;
-  height:calc(100svh - 156px);
-  min-height:188px;
-  max-height:220px;
+  height:auto;
+  min-height:0;
+  max-height:none;
   margin:0 auto;
+  border:0;
+  background:transparent;
  }
 
  .app.mobile-tab-build #traitCardLayer{
@@ -2315,14 +2357,14 @@ body.callout-layout-dragging{
  .app.mobile-tab-build{
   --mobile-build-callout-width:92px;
   --mobile-build-callout-height:42px;
-  --mobile-build-callout-header-height:16px;
-  --mobile-build-callout-body-height:26px;
+  --mobile-build-callout-header-height:15px;
+  --mobile-build-callout-body-height:27px;
   --mobile-build-callout-font-size:7px;
   --mobile-build-callout-rating-size:12px;
   --mobile-build-callout-meta-size:7px;
   --mobile-build-callout-player-image-size:20px;
- --mobile-build-left-callout-x:6px;
- --mobile-build-right-callout-x:6px;
+  --mobile-build-left-callout-x:6px;
+  --mobile-build-right-callout-x:6px;
 }
 
 .app.mobile-tab-build #traitCardLayer .trait-card{
@@ -2338,16 +2380,23 @@ body.callout-layout-dragging{
  .app.mobile-tab-build #traitCardLayer .trait-card .head{
   min-height:var(--mobile-build-callout-header-height);
   height:var(--mobile-build-callout-header-height);
-  padding:4px 6px;
+  padding:3px 5px;
   font-size:var(--mobile-build-callout-font-size);
   line-height:1;
+  letter-spacing:.65px;
  }
 
  .app.mobile-tab-build #traitCardLayer .trait-card .body{
   height:var(--mobile-build-callout-body-height);
   min-height:var(--mobile-build-callout-body-height);
-  padding:4px 6px;
+  padding:3px 5px;
   font-size:var(--mobile-build-callout-font-size);
+  line-height:1;
+ }
+
+ .app.mobile-tab-build #traitCardLayer .trait-card.filled .body{
+  grid-template-columns:var(--mobile-build-callout-player-image-size) minmax(0,1fr);
+  gap:4px;
  }
 
  .app.mobile-tab-build #traitCardLayer .trait-photo{
@@ -2365,67 +2414,101 @@ body.callout-layout-dragging{
  }
 
  .app.mobile-tab-build .side{
-  width:176px;
-  max-width:176px;
+  width:100%;
+  max-width:148px;
   min-height:0;
-  max-height:calc(100svh - 116px);
-  padding:8px;
+  max-height:calc(100svh - 104px);
+  padding:6px;
   overflow-y:auto;
-  border-radius:14px;
+  overflow-x:hidden;
+  border-radius:12px;
+  gap:5px;
  }
 
  .app.mobile-tab-build .ovr-card{
-  width:74px;
-  height:74px;
-  margin:0 auto 6px;
+  width:64px;
+  height:64px;
+  flex:0 0 64px;
+  margin:0 auto 4px;
  }
 
  .app.mobile-tab-build .ovr-card:before{
-  width:64px;
-  height:64px;
+  width:56px;
+  height:56px;
  }
 
  .app.mobile-tab-build .ovr-card:after{
-  width:52px;
-  height:52px;
+  width:44px;
+  height:44px;
  }
 
  .app.mobile-tab-build .ovr{
-  font-size:25px;
+  font-size:22px;
+ }
+
+ .app.mobile-tab-build .ovr small{
+  font-size:8px;
+  letter-spacing:1px;
  }
 
  .app.mobile-tab-build .build-name{
-  font-size:12px;
+  min-height:0;
+  font-size:10px;
   line-height:1.1;
-  margin-bottom:6px;
+  margin-bottom:4px;
  }
 
  .app.mobile-tab-build .share-build,
  .app.mobile-tab-build #nextBtn{
   position:static;
   width:100%;
-  height:36px;
-  margin:0 0 6px;
-  border-radius:10px;
-  font-size:10px;
+  height:30px;
+  min-height:30px;
+  margin:0 0 5px;
+  border-radius:9px;
+  font-size:8px;
+  letter-spacing:.8px;
  }
 
  .app.mobile-tab-build .respins{
-  padding:8px;
-  margin-bottom:6px;
+  padding:6px;
+  margin-bottom:5px;
   font-size:9px;
  }
 
+ .app.mobile-tab-build .respins span{
+  font-size:14px;
+ }
+
  .app.mobile-tab-build .list{
-  max-height:120px;
+  max-height:86px;
   overflow:auto;
  }
 
  .app.mobile-tab-build .overview-item,
  .app.mobile-tab-build .li{
-  min-height:36px;
-  padding:6px;
-  font-size:9px;
+  grid-template-columns:4px 22px minmax(0,1fr) 26px;
+  min-height:30px;
+  padding:4px;
+  gap:4px;
+  font-size:8px;
+ }
+
+ .app.mobile-tab-build .mini-photo{
+  width:22px;
+  height:22px;
+ }
+
+ .app.mobile-tab-build .grade-badge{
+  width:24px;
+  height:24px;
+  font-size:8px;
+ }
+
+ .app.mobile-tab-build .lt,
+ .app.mobile-tab-build .lv{
+  font-size:8px;
+  line-height:1;
  }
 }
 
