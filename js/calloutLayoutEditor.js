@@ -17,6 +17,7 @@ const CALLOUT_LAYOUT_TRAITS={
 
 const DEFAULT_CALLOUT_VALUES={x:0,y:0,width:112,height:56,scale:1,z:20,nodeX:0,nodeY:0};
 const CALLOUT_LAYOUT_STEPS={width:4,height:4,scale:.05,z:1,node:2};
+const CALLOUT_PROFILE_NAMES=["desktop","mobilePortrait","mobileLandscape"];
 
 // CALLOUT LAYOUT SOURCE OF TRUTH
 // Edit or paste exported values here after tuning.
@@ -28,42 +29,71 @@ const CALLOUT_LAYOUT_STEPS={width:4,height:4,scale:.05,z:1,node:2};
 // scale: visual card size without changing the saved width/height numbers.
 // z: stacking order when cards overlap.
 // nodeX/nodeY: mobile/desktop presentation offsets added after bodyAnchorMap().
-const CALLOUT_LAYOUTS={
+const CALLOUT_LAYOUT_SOURCE={
  desktop:{
-  iq:{x:148,y:120,width:216,height:92,scale:1,z:20,nodeX:0,nodeY:0},
-  shooting:{x:148,y:242,width:216,height:92,scale:1,z:20,nodeX:0,nodeY:0},
-  handling:{x:148,y:364,width:216,height:92,scale:1,z:20,nodeX:0,nodeY:0},
-  speed:{x:148,y:486,width:216,height:92,scale:1,z:20,nodeX:0,nodeY:0},
-  clutch:{x:990,y:100,width:216,height:92,scale:1,z:20,nodeX:0,nodeY:0},
-  leadership:{x:990,y:222,width:216,height:92,scale:1,z:20,nodeX:0,nodeY:0},
-  rebounding:{x:990,y:342,width:216,height:92,scale:1,z:20,nodeX:0,nodeY:0},
-  size:{x:990,y:464,width:216,height:92,scale:1,z:20,nodeX:0,nodeY:0},
-  defense:{x:990,y:586,width:216,height:92,scale:1,z:20,nodeX:0,nodeY:0}
+  iq:{x:89,y:125,width:262,height:126,scale:1,z:20,nodeX:-22,nodeY:-126},
+  shooting:{x:87,y:278,width:254,height:131,scale:1,z:20,nodeX:-56,nodeY:-67},
+  handling:{x:89,y:434,width:249,height:141,scale:1,z:20,nodeX:-87,nodeY:-27},
+  speed:{x:80,y:595,width:263,height:122,scale:1,z:20,nodeX:-21,nodeY:-26},
+  clutch:{x:971,y:83,width:252,height:116,scale:1,z:20,nodeX:-3,nodeY:-108},
+  leadership:{x:971,y:208,width:240,height:108,scale:1,z:20,nodeX:-46,nodeY:-107},
+  rebounding:{x:971,y:323,width:216,height:92,scale:1,z:20,nodeX:-2,nodeY:-86},
+  size:{x:973,y:425,width:255,height:108,scale:1,z:20,nodeX:-21,nodeY:-62},
+  defense:{x:976,y:544,width:246,height:124,scale:1,z:20,nodeX:15,nodeY:18}
  },
  mobilePortrait:{
-  iq:{x:6,y:110,width:106,height:56,scale:1,z:20,nodeX:0,nodeY:0},
-  shooting:{x:6,y:176,width:106,height:56,scale:1,z:20,nodeX:0,nodeY:0},
-  handling:{x:6,y:242,width:106,height:56,scale:1,z:20,nodeX:0,nodeY:0},
-  speed:{x:6,y:308,width:106,height:56,scale:1,z:20,nodeX:0,nodeY:0},
-  size:{x:6,y:374,width:106,height:56,scale:1,z:20,nodeX:0,nodeY:0},
-  clutch:{x:262,y:144,width:106,height:56,scale:1,z:20,nodeX:0,nodeY:0},
-  leadership:{x:262,y:210,width:106,height:56,scale:1,z:20,nodeX:0,nodeY:0},
-  rebounding:{x:262,y:276,width:106,height:56,scale:1,z:20,nodeX:0,nodeY:0},
-  defense:{x:262,y:342,width:106,height:56,scale:1,z:20,nodeX:0,nodeY:0}
+  iq:{x:3,y:132,width:117,height:59,scale:1,z:20,nodeX:-14,nodeY:-50},
+  shooting:{x:0,y:207,width:120,height:56,scale:1,z:20,nodeX:-28,nodeY:-29},
+  handling:{x:6,y:326,width:109,height:62,scale:1,z:20,nodeX:-38,nodeY:-14},
+  speed:{x:128,y:367,width:106,height:56,scale:1,z:20,nodeX:-8,nodeY:-26},
+  clutch:{x:262,y:129,width:106,height:56,scale:1,z:20,nodeX:1,nodeY:-40},
+  leadership:{x:264,y:194,width:106,height:56,scale:1,z:20,nodeX:-20,nodeY:-43},
+  rebounding:{x:266,y:316,width:106,height:56,scale:1,z:20,nodeX:-8,nodeY:-38},
+  size:{x:264,y:254,width:106,height:56,scale:1,z:20,nodeX:-7,nodeY:-32},
+  defense:{x:265,y:378,width:107,height:57,scale:1,z:20,nodeX:2,nodeY:7}
  },
  mobileLandscape:{
-  iq:{x:6,y:48,width:92,height:42,scale:.92,z:20,nodeX:0,nodeY:0},
-  shooting:{x:6,y:90,width:92,height:42,scale:.92,z:20,nodeX:0,nodeY:0},
-  handling:{x:6,y:132,width:92,height:42,scale:.92,z:20,nodeX:0,nodeY:0},
-  speed:{x:6,y:174,width:92,height:42,scale:.92,z:20,nodeX:0,nodeY:0},
-  size:{x:6,y:216,width:92,height:42,scale:.92,z:20,nodeX:0,nodeY:0},
-  clutch:{x:510,y:58,width:92,height:42,scale:.92,z:20,nodeX:0,nodeY:0},
-  leadership:{x:510,y:100,width:92,height:42,scale:.92,z:20,nodeX:0,nodeY:0},
-  rebounding:{x:510,y:142,width:92,height:42,scale:.92,z:20,nodeX:0,nodeY:0},
-  defense:{x:510,y:184,width:92,height:42,scale:.92,z:20,nodeX:0,nodeY:0}
+  iq:{x:146,y:48,width:131,height:50,scale:.92,z:20,nodeX:-18,nodeY:-49},
+  shooting:{x:166,y:103,width:118,height:48,scale:.92,z:20,nodeX:3,nodeY:-31},
+  handling:{x:107,y:208,width:120,height:46,scale:.92,z:20,nodeX:7,nodeY:-11},
+  speed:{x:112,y:151,width:124,height:50,scale:.92,z:20,nodeX:22,nodeY:-16},
+  clutch:{x:482,y:26,width:103,height:48,scale:.92,z:20,nodeX:-16,nodeY:-35},
+  leadership:{x:479,y:75,width:120,height:46,scale:.92,z:20,nodeX:-10,nodeY:-36},
+  rebounding:{x:486,y:173,width:109,height:43,scale:.92,z:20,nodeX:-28,nodeY:-29},
+  size:{x:483,y:123,width:116,height:48,scale:.92,z:20,nodeX:-12,nodeY:-23},
+  defense:{x:487,y:218,width:109,height:40,scale:.92,z:20,nodeX:-28,nodeY:6}
  }
 };
-const BASE_CALLOUT_LAYOUTS=JSON.parse(JSON.stringify(CALLOUT_LAYOUTS));
+
+function cloneCalloutValue(value={}){
+ return {
+  x:normalizedNumber(value.x,DEFAULT_CALLOUT_VALUES.x),
+  y:normalizedNumber(value.y,DEFAULT_CALLOUT_VALUES.y),
+  width:normalizedNumber(value.width,DEFAULT_CALLOUT_VALUES.width),
+  height:normalizedNumber(value.height,DEFAULT_CALLOUT_VALUES.height),
+  scale:normalizedNumber(value.scale,DEFAULT_CALLOUT_VALUES.scale),
+  z:normalizedNumber(value.z,DEFAULT_CALLOUT_VALUES.z),
+  nodeX:normalizedNumber(value.nodeX,DEFAULT_CALLOUT_VALUES.nodeX),
+  nodeY:normalizedNumber(value.nodeY,DEFAULT_CALLOUT_VALUES.nodeY)
+ };
+}
+
+function cloneCalloutProfile(profile={}){
+ return Object.fromEntries(Object.keys(CALLOUT_LAYOUT_TRAITS).map(key=>[
+  key,
+  cloneCalloutValue({...DEFAULT_CALLOUT_VALUES,...(profile[key]||{})})
+ ]));
+}
+
+function cloneCalloutLayouts(layouts={}){
+ return Object.fromEntries(CALLOUT_PROFILE_NAMES.map(profile=>[
+  profile,
+  cloneCalloutProfile(layouts[profile])
+ ]));
+}
+
+const CALLOUT_LAYOUTS=cloneCalloutLayouts(CALLOUT_LAYOUT_SOURCE);
+const BASE_CALLOUT_LAYOUTS=cloneCalloutLayouts(CALLOUT_LAYOUT_SOURCE);
 
 let activeCalloutEditorProfile="";
 let selectedCalloutKey="iq";
@@ -87,11 +117,13 @@ function calloutActiveProfile(){
 }
 
 function calloutLayoutFor(profile=calloutActiveProfile()){
- return CALLOUT_LAYOUTS[profile]||CALLOUT_LAYOUTS.desktop;
+ if(!(profile in CALLOUT_LAYOUTS))profile="desktop";
+ if(!CALLOUT_LAYOUTS[profile])CALLOUT_LAYOUTS[profile]=cloneCalloutProfile();
+ return CALLOUT_LAYOUTS[profile];
 }
 
 function calloutValue(key,profile=calloutActiveProfile()){
- return {...DEFAULT_CALLOUT_VALUES,...(calloutLayoutFor(profile)[key]||{})};
+ return cloneCalloutValue(calloutLayoutFor(profile)[key]);
 }
 
 function calloutCard(key){
@@ -140,8 +172,9 @@ function calloutEditorMobileViewport(){
 }
 
 function patchCalloutValue(key,patch,profile=calloutActiveProfile()){
+ if(!CALLOUT_LAYOUT_TRAITS[key])return;
  const layout=calloutLayoutFor(profile);
- layout[key]={...DEFAULT_CALLOUT_VALUES,...layout[key],...patch};
+ layout[key]=cloneCalloutValue({...layout[key],...patch});
 }
 
 function queueCalloutLayoutDraw(){
@@ -155,7 +188,7 @@ function queueCalloutLayoutDraw(){
 }
 
 function calloutLayoutNodeOffset(key){
- const value=calloutValue(key);
+ const value=calloutValue(key,calloutActiveProfile());
  return {x:value.nodeX||0,y:value.nodeY||0};
 }
 
@@ -573,7 +606,7 @@ function centerSelectedCallout(){
 
 function resetSelectedCallout(){
  const profile=calloutActiveProfile();
- CALLOUT_LAYOUTS[profile][selectedCalloutKey]={...DEFAULT_CALLOUT_VALUES,...BASE_CALLOUT_LAYOUTS[profile][selectedCalloutKey]};
+ CALLOUT_LAYOUTS[profile][selectedCalloutKey]=cloneCalloutValue(BASE_CALLOUT_LAYOUTS[profile][selectedCalloutKey]);
  applyCalloutLayout();
  queueCalloutLayoutDraw();
 }
@@ -587,16 +620,14 @@ function bringSelectedCalloutForward(front){
 
 function resetCurrentCalloutProfile(){
  const profile=calloutActiveProfile();
- Object.keys(CALLOUT_LAYOUT_TRAITS).forEach(key=>{
-  CALLOUT_LAYOUTS[profile][key]={...DEFAULT_CALLOUT_VALUES,...BASE_CALLOUT_LAYOUTS[profile][key]};
- });
+ CALLOUT_LAYOUTS[profile]=cloneCalloutProfile(BASE_CALLOUT_LAYOUTS[profile]);
  applyCalloutLayout();
  queueCalloutLayoutDraw();
 }
 
 function serializeCalloutLayout(profile){
- const body=Object.entries(calloutLayoutFor(profile)).map(([key,value])=>{
-  const v={...DEFAULT_CALLOUT_VALUES,...value};
+ const body=Object.keys(CALLOUT_LAYOUT_TRAITS).map(key=>{
+  const v=calloutValue(key,profile);
   return `    ${key}: { x: ${v.x}, y: ${v.y}, width: ${v.width}, height: ${v.height}, scale: ${v.scale}, z: ${v.z}, nodeX: ${v.nodeX}, nodeY: ${v.nodeY} }`;
  }).join(",\n");
  return `  ${profile}: {\n${body}\n  }`;
@@ -615,7 +646,7 @@ async function copyCalloutExport(output){
 
 function exportCalloutLayout(all){
  const output=all
-  ?`const CALLOUT_LAYOUTS = {\n${["desktop","mobilePortrait","mobileLandscape"].map(serializeCalloutLayout).join(",\n")}\n};`
+  ?`const CALLOUT_LAYOUTS = {\n${CALLOUT_PROFILE_NAMES.map(serializeCalloutLayout).join(",\n")}\n};`
   :`const CALLOUT_LAYOUTS = {\n${serializeCalloutLayout(calloutActiveProfile())}\n};`;
  copyCalloutExport(output);
 }
@@ -626,11 +657,12 @@ function importCalloutLayout(){
  try{
   const parsed=Function(`"use strict"; return (${pasted.replace(/^const\s+CALLOUT_LAYOUTS\s*=\s*/,"").replace(/;\s*$/,"")});`)();
   if(parsed.desktop||parsed.mobilePortrait||parsed.mobileLandscape){
-   ["desktop","mobilePortrait","mobileLandscape"].forEach(profile=>{
-    if(parsed[profile])CALLOUT_LAYOUTS[profile]={...CALLOUT_LAYOUTS[profile],...parsed[profile]};
+   CALLOUT_PROFILE_NAMES.forEach(profile=>{
+    if(parsed[profile])CALLOUT_LAYOUTS[profile]=cloneCalloutProfile({...CALLOUT_LAYOUTS[profile],...parsed[profile]});
    });
   }else{
-   CALLOUT_LAYOUTS[calloutActiveProfile()]={...CALLOUT_LAYOUTS[calloutActiveProfile()],...parsed};
+   const profile=calloutActiveProfile();
+   CALLOUT_LAYOUTS[profile]=cloneCalloutProfile({...CALLOUT_LAYOUTS[profile],...parsed});
   }
   applyCalloutLayout();
   queueCalloutLayoutDraw();

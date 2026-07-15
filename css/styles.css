@@ -2017,7 +2017,7 @@ body.callout-layout-dragging{
   display:none;
  }
 
- .app.mobile-tab-spin .left{
+.app.mobile-tab-spin .left{
   display:flex;
  }
 
@@ -2133,18 +2133,18 @@ body.callout-layout-dragging{
  .app{
   min-height:100svh;
   height:100svh;
-  padding-bottom:calc(56px + env(safe-area-inset-bottom));
+  padding-bottom:calc(50px + env(safe-area-inset-bottom));
   overflow:hidden;
  }
 
  .topbar{
-  height:38px;
-  min-height:38px;
-  padding:4px max(8px,env(safe-area-inset-right)) 4px max(8px,env(safe-area-inset-left));
+  height:34px;
+  min-height:34px;
+  padding:3px max(8px,env(safe-area-inset-right)) 3px max(8px,env(safe-area-inset-left));
  }
 
  .brand{
-  font-size:20px;
+  font-size:18px;
   line-height:1;
   white-space:nowrap;
  }
@@ -2159,9 +2159,9 @@ body.callout-layout-dragging{
  }
 
  .top-actions button{
-  height:30px;
-  min-height:30px;
-  padding:0 12px;
+  height:28px;
+  min-height:28px;
+  padding:0 10px;
   border-radius:8px;
   font-size:10px;
   line-height:1;
@@ -2170,9 +2170,9 @@ body.callout-layout-dragging{
  .layout{
   width:100%;
   max-width:100%;
-  height:calc(100svh - 38px);
+  height:calc(100svh - 34px);
   min-height:0;
-  padding:6px max(8px,env(safe-area-inset-right)) calc(60px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));
+  padding:5px max(7px,env(safe-area-inset-right)) calc(50px + env(safe-area-inset-bottom)) max(7px,env(safe-area-inset-left));
   gap:6px;
   overflow:hidden;
  }
@@ -2181,12 +2181,12 @@ body.callout-layout-dragging{
   position:fixed;
   left:max(10px,env(safe-area-inset-left));
   right:max(10px,env(safe-area-inset-right));
-  bottom:calc(6px + env(safe-area-inset-bottom));
+  bottom:calc(5px + env(safe-area-inset-bottom));
   z-index:95;
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:8px;
-  padding:5px;
+  padding:4px;
   border:1px solid rgba(158,230,191,.2);
   border-radius:16px;
   background:rgba(4,9,15,.9);
@@ -2196,8 +2196,8 @@ body.callout-layout-dragging{
 
  .mobile-tab-button{
   position:relative;
-  height:38px;
-  min-height:38px;
+  height:34px;
+  min-height:34px;
   border-radius:12px;
   border:1px solid rgba(103,248,220,.2);
   background:rgba(255,255,255,.035);
@@ -2237,6 +2237,30 @@ body.callout-layout-dragging{
 
  .app.mobile-tab-spin .left{
   display:flex;
+  min-height:0;
+  max-height:calc(100svh - 89px);
+  overflow:hidden;
+ }
+
+ .app.mobile-tab-spin .player-card{
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+  max-height:calc(100svh - 100px);
+  overflow:hidden;
+ }
+
+ .app.mobile-tab-spin .player-card-head{
+  flex:0 0 auto;
+ }
+
+ .app.mobile-tab-spin .trait-menu{
+  min-height:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+  padding-bottom:8px;
  }
 
  .app.mobile-tab-build .left{
@@ -2253,7 +2277,7 @@ body.callout-layout-dragging{
 
  .app.mobile-tab-build .layout{
   display:grid;
-  grid-template-columns:minmax(0,1fr) clamp(118px,17vw,148px);
+  grid-template-columns:minmax(0,1fr) clamp(76px,10vw,92px);
   grid-template-rows:minmax(0,1fr);
   align-items:start;
   column-gap:6px;
@@ -2263,9 +2287,9 @@ body.callout-layout-dragging{
  .app.mobile-tab-build .stage{
   width:100%;
   max-width:none;
-  height:calc(100svh - 104px);
-  min-height:236px;
-  max-height:calc(100svh - 104px);
+  height:calc(100svh - 88px);
+  min-height:270px;
+  max-height:calc(100svh - 88px);
   padding:0;
   overflow:hidden;
   border-radius:12px;
@@ -2277,7 +2301,7 @@ body.callout-layout-dragging{
   top:6px;
   left:6px;
   transform:none;
-  width:min(276px,calc(100% - 102px));
+  width:min(292px,calc(100% - 102px));
   justify-content:flex-start;
   gap:4px;
   padding:0;
@@ -2323,7 +2347,7 @@ body.callout-layout-dragging{
 
  .app.mobile-tab-build .player-wrap{
   position:absolute;
-  inset:34px 0 4px;
+  inset:32px 0 3px;
   width:100%;
   height:auto;
   min-height:0;
@@ -2415,10 +2439,10 @@ body.callout-layout-dragging{
 
  .app.mobile-tab-build .side{
   width:100%;
-  max-width:148px;
+  max-width:92px;
   min-height:0;
-  max-height:calc(100svh - 104px);
-  padding:6px;
+  max-height:calc(100svh - 88px);
+  padding:5px;
   overflow-y:auto;
   overflow-x:hidden;
   border-radius:12px;
@@ -2426,34 +2450,34 @@ body.callout-layout-dragging{
  }
 
  .app.mobile-tab-build .ovr-card{
-  width:64px;
-  height:64px;
-  flex:0 0 64px;
-  margin:0 auto 4px;
+  width:52px;
+  height:52px;
+  flex:0 0 52px;
+  margin:0 auto 3px;
  }
 
  .app.mobile-tab-build .ovr-card:before{
-  width:56px;
-  height:56px;
+  width:46px;
+  height:46px;
  }
 
  .app.mobile-tab-build .ovr-card:after{
-  width:44px;
-  height:44px;
+  width:36px;
+  height:36px;
  }
 
  .app.mobile-tab-build .ovr{
-  font-size:22px;
+  font-size:18px;
  }
 
  .app.mobile-tab-build .ovr small{
-  font-size:8px;
-  letter-spacing:1px;
+  font-size:7px;
+  letter-spacing:.7px;
  }
 
  .app.mobile-tab-build .build-name{
   min-height:0;
-  font-size:10px;
+  font-size:8px;
   line-height:1.1;
   margin-bottom:4px;
  }
@@ -2462,47 +2486,48 @@ body.callout-layout-dragging{
  .app.mobile-tab-build #nextBtn{
   position:static;
   width:100%;
-  height:30px;
-  min-height:30px;
+  height:26px;
+  min-height:26px;
   margin:0 0 5px;
-  border-radius:9px;
-  font-size:8px;
-  letter-spacing:.8px;
+  border-radius:8px;
+  font-size:7px;
+  letter-spacing:.5px;
  }
 
  .app.mobile-tab-build .respins{
-  padding:6px;
-  margin-bottom:5px;
-  font-size:9px;
+  padding:5px;
+  margin-bottom:4px;
+  font-size:7px;
+  letter-spacing:.5px;
  }
 
  .app.mobile-tab-build .respins span{
-  font-size:14px;
+  font-size:11px;
  }
 
  .app.mobile-tab-build .list{
-  max-height:86px;
+  max-height:54px;
   overflow:auto;
  }
 
  .app.mobile-tab-build .overview-item,
  .app.mobile-tab-build .li{
-  grid-template-columns:4px 22px minmax(0,1fr) 26px;
-  min-height:30px;
-  padding:4px;
-  gap:4px;
-  font-size:8px;
+  grid-template-columns:4px 18px minmax(0,1fr) 22px;
+  min-height:26px;
+  padding:3px;
+  gap:3px;
+  font-size:7px;
  }
 
  .app.mobile-tab-build .mini-photo{
-  width:22px;
-  height:22px;
+  width:18px;
+  height:18px;
  }
 
  .app.mobile-tab-build .grade-badge{
-  width:24px;
-  height:24px;
-  font-size:8px;
+  width:20px;
+  height:20px;
+  font-size:7px;
  }
 
  .app.mobile-tab-build .lt,
